@@ -1,6 +1,7 @@
-#include "timer.hpp"
 #include <avr/interrupt.h>
 #include <avr/io.h>
+
+#include "drivers/timer.hpp"
 
 volatile uint32_t timer0_overflow_count = 0;
 volatile uint32_t timer0_millis = 0;
@@ -48,15 +49,13 @@ void Timer::delay(uint32_t ms) {
 void Timer::delayMicroseconds(uint32_t us) {
   // For micros, we need a much more precise implementation for timekeeping, as
   // using the coarse interrupt method will easily result in times over 10us.
-  // For microsecond accuracy, we need to go down to a clock cycle level. At 
+  // For microsecond accuracy, we need to go down to a clock cycle level. At
   // 16 MHz, each cycle takes ~63ns to complete, so ~16 CPU cycles are needed to
   // delay for 1us. This can be extended to delay for specified microseconds. As
   // delays are blocking, a busy loop will work perfectly for this use case.
   while (us--) {
     uint8_t cycles = 16;
-    while (cycles--) {
-      asm volatile("nop");
-    }
+    while (cycles--) { asm volatile("nop"); }
   }
 }
 

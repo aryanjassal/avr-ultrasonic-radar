@@ -1,6 +1,6 @@
 #pragma once
 
-#include "pin.hpp"
+#include "drivers/pin.hpp"
 
 #define LCD_OP_CLEAR_BASE 0x01
 #define LCD_OP_HOME_BASE 0x02
@@ -90,4 +90,13 @@ class LCD {
 
   // Send control sequences to the display.
   void command(LCD_CMD command);
+
+  // Clear the screen.
+  void clear();
+
+  // Move the cursor to (0, 0).
+  void home();
+
+  // Move the cursor to a specified location on the display.
+  void setCursor(uint8_t x, uint8_t y);
 };

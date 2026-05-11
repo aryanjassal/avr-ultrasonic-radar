@@ -1,7 +1,7 @@
-#include "button.hpp"
-#include "timer.hpp"
+#include "hardware/button.hpp"
+#include "drivers/timer.hpp"
 
-Button::Button(InputPin &p) : pin(p) {};
+Button::Button(InputPin& p) : pin(p) {};
 
 bool Button::pressed() {
   bool state = pin.read();
@@ -17,8 +17,7 @@ bool Button::pressed() {
       lastStable = state;
 
       // Falling edge: HIGH -> LOW
-      if (!state)
-        return true;
+      if (!state) return true;
     }
   }
 

@@ -1,13 +1,14 @@
-#include "buzzer.hpp"
-#include "pin.hpp"
-#include "timer.hpp"
+#include "hardware/buzzer.hpp"
+
 #include <avr/io.h>
 
-Buzzer::Buzzer(const PinDescriptor &d) : pin(d) {}
+#include "drivers/pin.hpp"
+#include "drivers/timer.hpp"
+
+Buzzer::Buzzer(const PinDescriptor& d) : pin(d) {}
 
 void Buzzer::play(uint16_t freq, uint8_t duty, uint16_t duration_ms) {
-  if (stopTime != 0)
-    return;
+  if (stopTime != 0) return;
   uint32_t p = 1000000ul / freq;
 
   period = p;
@@ -20,8 +21,7 @@ void Buzzer::play(uint16_t freq, uint8_t duty, uint16_t duration_ms) {
 }
 
 void Buzzer::update() {
-  if (stopTime == 0)
-    return;
+  if (stopTime == 0) return;
 
   uint32_t now = micros();
   uint32_t elapsed = now - lastEdge;

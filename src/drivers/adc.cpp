@@ -1,5 +1,6 @@
-#include "adc.hpp"
 #include <avr/io.h>
+
+#include "drivers/adc.hpp"
 
 void Adc::init() {
   // AVcc reference

@@ -1,7 +1,9 @@
-#include "drivers/lcd.hpp"
+#include "hardware/lcd.hpp"
 
-#include "pin.hpp"
-#include "timer.hpp"
+#include "drivers/pin.hpp"
+#include "drivers/timer.hpp"
+
+static const uint8_t row_offsets[] = {0x00, 0x40};
 
 LCD::LCD(const PinDescriptor& registerSelect, const PinDescriptor& enable,
          const PinDescriptor& D4, const PinDescriptor& D5,
@@ -65,3 +67,19 @@ void LCD::print(const char* str) {
 }
 
 void LCD::print(uint8_t byte) { _send(byte, 1); }
+
+void LCD::setCursor(uint8_t x, uint8_t y) {
+  if (x >= 16) x = 15;
+  if (y >= 2) y = 1;
+  command((LCD_CMD)(0x80 | (row_offsets[y] + x)));
+}
+
+void LCD::clear() {
+  command(LCD_CMD_CLEAR);
+  delay(2);
+}
+
+void LCD::home() {
+  command(LCD_CMD_HOME);
+  delay(2);
+}

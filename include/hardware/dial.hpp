@@ -2,11 +2,13 @@
 
 #include <stdint.h>
 
-class Dial {
-public:
-  static void init();
+namespace Dial {
+// The dial uses INT0 and INT1 hardware interrupts to determine dedent direction
+// and thus is fixed to 1 per system.
+void init();
 
-  static int8_t poll();
+// Returns accumulated detent movement
+int8_t poll();
 
-  static uint8_t pressed();
-};
+uint8_t pressed();
+};  // namespace Dial

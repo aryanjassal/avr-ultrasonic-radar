@@ -1,4 +1,5 @@
-#include "servo.hpp"
+#include "hardware/servo.hpp"
+
 #include <avr/io.h>
 #include <stdint.h>
 
@@ -12,8 +13,7 @@ void Servo::init() {
 
 void Servo::write_angle(uint8_t angle) {
   // Unsigned char data type means no negative values
-  if (angle > 180)
-    angle = 180;
+  if (angle > 180) angle = 180;
   // Calculate pulse duration
   uint16_t pulse_us =
       SERVO_MIN_US + ((uint32_t)angle * (SERVO_MAX_US - SERVO_MIN_US)) / 180;

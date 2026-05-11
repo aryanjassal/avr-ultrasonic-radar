@@ -1,5 +1,6 @@
 #define F_CPU 16000000ul
-#include "usart.hpp"
+
+#include "drivers/usart.hpp"
 
 #include <avr/interrupt.h>
 #include <avr/io.h>
@@ -8,9 +9,7 @@
 static void (*usartRxHandler)() = nullptr;
 
 ISR(USART_RX_vect) {
-  if (usartRxHandler != nullptr) {
-    usartRxHandler();
-  }
+  if (usartRxHandler != nullptr) { usartRxHandler(); }
 }
 
 void USART::init(uint32_t baud) {
@@ -21,22 +20,19 @@ void USART::init(uint32_t baud) {
 }
 
 void USART::flush() {
-  while ((UCSR0A & (1 << RXC0)))
-    (void)UDR0;
+  while ((UCSR0A & (1 << RXC0))) (void)UDR0;
 }
 
 void USART::print(char c) {
-  while (!(UCSR0A & (1 << UDRE0)))
-    ;
+  while (!(UCSR0A & (1 << UDRE0)));
   UDR0 = c;
 }
 
-void USART::print(const char *str) {
-  while (*str)
-    print(*str++);
+void USART::print(const char* str) {
+  while (*str) print(*str++);
 }
 
-void USART::println(const char *str) {
+void USART::println(const char* str) {
   print(str);
   print("\r\n");
 }

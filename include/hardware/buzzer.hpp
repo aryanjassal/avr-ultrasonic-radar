@@ -1,6 +1,8 @@
 #pragma once
-#include "pin.hpp"
+
 #include <stdint.h>
+
+#include "drivers/pin.hpp"
 
 class Buzzer {
   OutputPin pin;
@@ -10,8 +12,8 @@ class Buzzer {
   uint32_t lastEdge = 0;
   bool level = false;
 
-public:
-  Buzzer(const PinDescriptor &d);
+ public:
+  Buzzer(const PinDescriptor& d);
   void update();
   void play(uint16_t freq, uint8_t duty, uint16_t duration_ms);
   void stop();

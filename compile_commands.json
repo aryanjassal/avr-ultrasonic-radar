@@ -150,34 +150,76 @@
         "output": ".pio/build/uno/FrameworkArduino/wiring_shift.c.o"
     },
     {
-        "command": "/home/aryanj/.platformio/packages/toolchain-atmelavr/bin/avr-g++ -o .pio/build/uno/src/adc.cpp.o -c -fno-exceptions -fno-threadsafe-statics -fpermissive -std=gnu++11 -mmcu=atmega328p -Os -Wall -ffunction-sections -fdata-sections -flto -DPLATFORMIO=60119 -DARDUINO_AVR_UNO -DF_CPU=16000000L -DARDUINO_ARCH_AVR -DARDUINO=10808 -Iinclude -Isrc -I/home/aryanj/.platformio/packages/framework-arduino-avr/cores/arduino -I/home/aryanj/.platformio/packages/framework-arduino-avr/variants/standard src/adc.cpp",
+        "command": "/home/aryanj/.platformio/packages/toolchain-atmelavr/bin/avr-g++ -o .pio/build/uno/src/drivers/adc.cpp.o -c -fno-exceptions -fno-threadsafe-statics -fpermissive -std=gnu++11 -mmcu=atmega328p -Os -Wall -ffunction-sections -fdata-sections -flto -DPLATFORMIO=60119 -DARDUINO_AVR_UNO -DF_CPU=16000000L -DARDUINO_ARCH_AVR -DARDUINO=10808 -Iinclude -Isrc -I/home/aryanj/.platformio/packages/framework-arduino-avr/cores/arduino -I/home/aryanj/.platformio/packages/framework-arduino-avr/variants/standard src/drivers/adc.cpp",
         "directory": "/home/aryanj/Projects/avr-ultrasonic-radar",
-        "file": "src/adc.cpp",
-        "output": ".pio/build/uno/src/adc.cpp.o"
+        "file": "src/drivers/adc.cpp",
+        "output": ".pio/build/uno/src/drivers/adc.cpp.o"
     },
     {
-        "command": "/home/aryanj/.platformio/packages/toolchain-atmelavr/bin/avr-g++ -o .pio/build/uno/src/button.cpp.o -c -fno-exceptions -fno-threadsafe-statics -fpermissive -std=gnu++11 -mmcu=atmega328p -Os -Wall -ffunction-sections -fdata-sections -flto -DPLATFORMIO=60119 -DARDUINO_AVR_UNO -DF_CPU=16000000L -DARDUINO_ARCH_AVR -DARDUINO=10808 -Iinclude -Isrc -I/home/aryanj/.platformio/packages/framework-arduino-avr/cores/arduino -I/home/aryanj/.platformio/packages/framework-arduino-avr/variants/standard src/button.cpp",
+        "command": "/home/aryanj/.platformio/packages/toolchain-atmelavr/bin/avr-g++ -o .pio/build/uno/src/drivers/display.cpp.o -c -fno-exceptions -fno-threadsafe-statics -fpermissive -std=gnu++11 -mmcu=atmega328p -Os -Wall -ffunction-sections -fdata-sections -flto -DPLATFORMIO=60119 -DARDUINO_AVR_UNO -DF_CPU=16000000L -DARDUINO_ARCH_AVR -DARDUINO=10808 -Iinclude -Isrc -I/home/aryanj/.platformio/packages/framework-arduino-avr/cores/arduino -I/home/aryanj/.platformio/packages/framework-arduino-avr/variants/standard src/drivers/display.cpp",
         "directory": "/home/aryanj/Projects/avr-ultrasonic-radar",
-        "file": "src/button.cpp",
-        "output": ".pio/build/uno/src/button.cpp.o"
+        "file": "src/drivers/display.cpp",
+        "output": ".pio/build/uno/src/drivers/display.cpp.o"
     },
     {
-        "command": "/home/aryanj/.platformio/packages/toolchain-atmelavr/bin/avr-g++ -o .pio/build/uno/src/buzzer.cpp.o -c -fno-exceptions -fno-threadsafe-statics -fpermissive -std=gnu++11 -mmcu=atmega328p -Os -Wall -ffunction-sections -fdata-sections -flto -DPLATFORMIO=60119 -DARDUINO_AVR_UNO -DF_CPU=16000000L -DARDUINO_ARCH_AVR -DARDUINO=10808 -Iinclude -Isrc -I/home/aryanj/.platformio/packages/framework-arduino-avr/cores/arduino -I/home/aryanj/.platformio/packages/framework-arduino-avr/variants/standard src/buzzer.cpp",
+        "command": "/home/aryanj/.platformio/packages/toolchain-atmelavr/bin/avr-g++ -o .pio/build/uno/src/drivers/pin.cpp.o -c -fno-exceptions -fno-threadsafe-statics -fpermissive -std=gnu++11 -mmcu=atmega328p -Os -Wall -ffunction-sections -fdata-sections -flto -DPLATFORMIO=60119 -DARDUINO_AVR_UNO -DF_CPU=16000000L -DARDUINO_ARCH_AVR -DARDUINO=10808 -Iinclude -Isrc -I/home/aryanj/.platformio/packages/framework-arduino-avr/cores/arduino -I/home/aryanj/.platformio/packages/framework-arduino-avr/variants/standard src/drivers/pin.cpp",
         "directory": "/home/aryanj/Projects/avr-ultrasonic-radar",
-        "file": "src/buzzer.cpp",
-        "output": ".pio/build/uno/src/buzzer.cpp.o"
+        "file": "src/drivers/pin.cpp",
+        "output": ".pio/build/uno/src/drivers/pin.cpp.o"
     },
     {
-        "command": "/home/aryanj/.platformio/packages/toolchain-atmelavr/bin/avr-g++ -o .pio/build/uno/src/dial.cpp.o -c -fno-exceptions -fno-threadsafe-statics -fpermissive -std=gnu++11 -mmcu=atmega328p -Os -Wall -ffunction-sections -fdata-sections -flto -DPLATFORMIO=60119 -DARDUINO_AVR_UNO -DF_CPU=16000000L -DARDUINO_ARCH_AVR -DARDUINO=10808 -Iinclude -Isrc -I/home/aryanj/.platformio/packages/framework-arduino-avr/cores/arduino -I/home/aryanj/.platformio/packages/framework-arduino-avr/variants/standard src/dial.cpp",
+        "command": "/home/aryanj/.platformio/packages/toolchain-atmelavr/bin/avr-g++ -o .pio/build/uno/src/drivers/pwm.cpp.o -c -fno-exceptions -fno-threadsafe-statics -fpermissive -std=gnu++11 -mmcu=atmega328p -Os -Wall -ffunction-sections -fdata-sections -flto -DPLATFORMIO=60119 -DARDUINO_AVR_UNO -DF_CPU=16000000L -DARDUINO_ARCH_AVR -DARDUINO=10808 -Iinclude -Isrc -I/home/aryanj/.platformio/packages/framework-arduino-avr/cores/arduino -I/home/aryanj/.platformio/packages/framework-arduino-avr/variants/standard src/drivers/pwm.cpp",
         "directory": "/home/aryanj/Projects/avr-ultrasonic-radar",
-        "file": "src/dial.cpp",
-        "output": ".pio/build/uno/src/dial.cpp.o"
+        "file": "src/drivers/pwm.cpp",
+        "output": ".pio/build/uno/src/drivers/pwm.cpp.o"
     },
     {
-        "command": "/home/aryanj/.platformio/packages/toolchain-atmelavr/bin/avr-g++ -o .pio/build/uno/src/drivers/lcd.cpp.o -c -fno-exceptions -fno-threadsafe-statics -fpermissive -std=gnu++11 -mmcu=atmega328p -Os -Wall -ffunction-sections -fdata-sections -flto -DPLATFORMIO=60119 -DARDUINO_AVR_UNO -DF_CPU=16000000L -DARDUINO_ARCH_AVR -DARDUINO=10808 -Iinclude -Isrc -I/home/aryanj/.platformio/packages/framework-arduino-avr/cores/arduino -I/home/aryanj/.platformio/packages/framework-arduino-avr/variants/standard src/drivers/lcd.cpp",
+        "command": "/home/aryanj/.platformio/packages/toolchain-atmelavr/bin/avr-g++ -o .pio/build/uno/src/drivers/timer.cpp.o -c -fno-exceptions -fno-threadsafe-statics -fpermissive -std=gnu++11 -mmcu=atmega328p -Os -Wall -ffunction-sections -fdata-sections -flto -DPLATFORMIO=60119 -DARDUINO_AVR_UNO -DF_CPU=16000000L -DARDUINO_ARCH_AVR -DARDUINO=10808 -Iinclude -Isrc -I/home/aryanj/.platformio/packages/framework-arduino-avr/cores/arduino -I/home/aryanj/.platformio/packages/framework-arduino-avr/variants/standard src/drivers/timer.cpp",
         "directory": "/home/aryanj/Projects/avr-ultrasonic-radar",
-        "file": "src/drivers/lcd.cpp",
-        "output": ".pio/build/uno/src/drivers/lcd.cpp.o"
+        "file": "src/drivers/timer.cpp",
+        "output": ".pio/build/uno/src/drivers/timer.cpp.o"
+    },
+    {
+        "command": "/home/aryanj/.platformio/packages/toolchain-atmelavr/bin/avr-g++ -o .pio/build/uno/src/drivers/usart.cpp.o -c -fno-exceptions -fno-threadsafe-statics -fpermissive -std=gnu++11 -mmcu=atmega328p -Os -Wall -ffunction-sections -fdata-sections -flto -DPLATFORMIO=60119 -DARDUINO_AVR_UNO -DF_CPU=16000000L -DARDUINO_ARCH_AVR -DARDUINO=10808 -Iinclude -Isrc -I/home/aryanj/.platformio/packages/framework-arduino-avr/cores/arduino -I/home/aryanj/.platformio/packages/framework-arduino-avr/variants/standard src/drivers/usart.cpp",
+        "directory": "/home/aryanj/Projects/avr-ultrasonic-radar",
+        "file": "src/drivers/usart.cpp",
+        "output": ".pio/build/uno/src/drivers/usart.cpp.o"
+    },
+    {
+        "command": "/home/aryanj/.platformio/packages/toolchain-atmelavr/bin/avr-g++ -o .pio/build/uno/src/hardware/button.cpp.o -c -fno-exceptions -fno-threadsafe-statics -fpermissive -std=gnu++11 -mmcu=atmega328p -Os -Wall -ffunction-sections -fdata-sections -flto -DPLATFORMIO=60119 -DARDUINO_AVR_UNO -DF_CPU=16000000L -DARDUINO_ARCH_AVR -DARDUINO=10808 -Iinclude -Isrc -I/home/aryanj/.platformio/packages/framework-arduino-avr/cores/arduino -I/home/aryanj/.platformio/packages/framework-arduino-avr/variants/standard src/hardware/button.cpp",
+        "directory": "/home/aryanj/Projects/avr-ultrasonic-radar",
+        "file": "src/hardware/button.cpp",
+        "output": ".pio/build/uno/src/hardware/button.cpp.o"
+    },
+    {
+        "command": "/home/aryanj/.platformio/packages/toolchain-atmelavr/bin/avr-g++ -o .pio/build/uno/src/hardware/buzzer.cpp.o -c -fno-exceptions -fno-threadsafe-statics -fpermissive -std=gnu++11 -mmcu=atmega328p -Os -Wall -ffunction-sections -fdata-sections -flto -DPLATFORMIO=60119 -DARDUINO_AVR_UNO -DF_CPU=16000000L -DARDUINO_ARCH_AVR -DARDUINO=10808 -Iinclude -Isrc -I/home/aryanj/.platformio/packages/framework-arduino-avr/cores/arduino -I/home/aryanj/.platformio/packages/framework-arduino-avr/variants/standard src/hardware/buzzer.cpp",
+        "directory": "/home/aryanj/Projects/avr-ultrasonic-radar",
+        "file": "src/hardware/buzzer.cpp",
+        "output": ".pio/build/uno/src/hardware/buzzer.cpp.o"
+    },
+    {
+        "command": "/home/aryanj/.platformio/packages/toolchain-atmelavr/bin/avr-g++ -o .pio/build/uno/src/hardware/dial.cpp.o -c -fno-exceptions -fno-threadsafe-statics -fpermissive -std=gnu++11 -mmcu=atmega328p -Os -Wall -ffunction-sections -fdata-sections -flto -DPLATFORMIO=60119 -DARDUINO_AVR_UNO -DF_CPU=16000000L -DARDUINO_ARCH_AVR -DARDUINO=10808 -Iinclude -Isrc -I/home/aryanj/.platformio/packages/framework-arduino-avr/cores/arduino -I/home/aryanj/.platformio/packages/framework-arduino-avr/variants/standard src/hardware/dial.cpp",
+        "directory": "/home/aryanj/Projects/avr-ultrasonic-radar",
+        "file": "src/hardware/dial.cpp",
+        "output": ".pio/build/uno/src/hardware/dial.cpp.o"
+    },
+    {
+        "command": "/home/aryanj/.platformio/packages/toolchain-atmelavr/bin/avr-g++ -o .pio/build/uno/src/hardware/lcd.cpp.o -c -fno-exceptions -fno-threadsafe-statics -fpermissive -std=gnu++11 -mmcu=atmega328p -Os -Wall -ffunction-sections -fdata-sections -flto -DPLATFORMIO=60119 -DARDUINO_AVR_UNO -DF_CPU=16000000L -DARDUINO_ARCH_AVR -DARDUINO=10808 -Iinclude -Isrc -I/home/aryanj/.platformio/packages/framework-arduino-avr/cores/arduino -I/home/aryanj/.platformio/packages/framework-arduino-avr/variants/standard src/hardware/lcd.cpp",
+        "directory": "/home/aryanj/Projects/avr-ultrasonic-radar",
+        "file": "src/hardware/lcd.cpp",
+        "output": ".pio/build/uno/src/hardware/lcd.cpp.o"
+    },
+    {
+        "command": "/home/aryanj/.platformio/packages/toolchain-atmelavr/bin/avr-g++ -o .pio/build/uno/src/hardware/servo.cpp.o -c -fno-exceptions -fno-threadsafe-statics -fpermissive -std=gnu++11 -mmcu=atmega328p -Os -Wall -ffunction-sections -fdata-sections -flto -DPLATFORMIO=60119 -DARDUINO_AVR_UNO -DF_CPU=16000000L -DARDUINO_ARCH_AVR -DARDUINO=10808 -Iinclude -Isrc -I/home/aryanj/.platformio/packages/framework-arduino-avr/cores/arduino -I/home/aryanj/.platformio/packages/framework-arduino-avr/variants/standard src/hardware/servo.cpp",
+        "directory": "/home/aryanj/Projects/avr-ultrasonic-radar",
+        "file": "src/hardware/servo.cpp",
+        "output": ".pio/build/uno/src/hardware/servo.cpp.o"
+    },
+    {
+        "command": "/home/aryanj/.platformio/packages/toolchain-atmelavr/bin/avr-g++ -o .pio/build/uno/src/hardware/ultrasonic.cpp.o -c -fno-exceptions -fno-threadsafe-statics -fpermissive -std=gnu++11 -mmcu=atmega328p -Os -Wall -ffunction-sections -fdata-sections -flto -DPLATFORMIO=60119 -DARDUINO_AVR_UNO -DF_CPU=16000000L -DARDUINO_ARCH_AVR -DARDUINO=10808 -Iinclude -Isrc -I/home/aryanj/.platformio/packages/framework-arduino-avr/cores/arduino -I/home/aryanj/.platformio/packages/framework-arduino-avr/variants/standard src/hardware/ultrasonic.cpp",
+        "directory": "/home/aryanj/Projects/avr-ultrasonic-radar",
+        "file": "src/hardware/ultrasonic.cpp",
+        "output": ".pio/build/uno/src/hardware/ultrasonic.cpp.o"
     },
     {
         "command": "/home/aryanj/.platformio/packages/toolchain-atmelavr/bin/avr-g++ -o .pio/build/uno/src/main.cpp.o -c -fno-exceptions -fno-threadsafe-statics -fpermissive -std=gnu++11 -mmcu=atmega328p -Os -Wall -ffunction-sections -fdata-sections -flto -DPLATFORMIO=60119 -DARDUINO_AVR_UNO -DF_CPU=16000000L -DARDUINO_ARCH_AVR -DARDUINO=10808 -Iinclude -Isrc -I/home/aryanj/.platformio/packages/framework-arduino-avr/cores/arduino -I/home/aryanj/.platformio/packages/framework-arduino-avr/variants/standard src/main.cpp",
@@ -186,40 +228,10 @@
         "output": ".pio/build/uno/src/main.cpp.o"
     },
     {
-        "command": "/home/aryanj/.platformio/packages/toolchain-atmelavr/bin/avr-g++ -o .pio/build/uno/src/pin.cpp.o -c -fno-exceptions -fno-threadsafe-statics -fpermissive -std=gnu++11 -mmcu=atmega328p -Os -Wall -ffunction-sections -fdata-sections -flto -DPLATFORMIO=60119 -DARDUINO_AVR_UNO -DF_CPU=16000000L -DARDUINO_ARCH_AVR -DARDUINO=10808 -Iinclude -Isrc -I/home/aryanj/.platformio/packages/framework-arduino-avr/cores/arduino -I/home/aryanj/.platformio/packages/framework-arduino-avr/variants/standard src/pin.cpp",
+        "command": "/home/aryanj/.platformio/packages/toolchain-atmelavr/bin/avr-g++ -o .pio/build/uno/src/ui/manager.cpp.o -c -fno-exceptions -fno-threadsafe-statics -fpermissive -std=gnu++11 -mmcu=atmega328p -Os -Wall -ffunction-sections -fdata-sections -flto -DPLATFORMIO=60119 -DARDUINO_AVR_UNO -DF_CPU=16000000L -DARDUINO_ARCH_AVR -DARDUINO=10808 -Iinclude -Isrc -I/home/aryanj/.platformio/packages/framework-arduino-avr/cores/arduino -I/home/aryanj/.platformio/packages/framework-arduino-avr/variants/standard src/ui/manager.cpp",
         "directory": "/home/aryanj/Projects/avr-ultrasonic-radar",
-        "file": "src/pin.cpp",
-        "output": ".pio/build/uno/src/pin.cpp.o"
-    },
-    {
-        "command": "/home/aryanj/.platformio/packages/toolchain-atmelavr/bin/avr-g++ -o .pio/build/uno/src/pwm.cpp.o -c -fno-exceptions -fno-threadsafe-statics -fpermissive -std=gnu++11 -mmcu=atmega328p -Os -Wall -ffunction-sections -fdata-sections -flto -DPLATFORMIO=60119 -DARDUINO_AVR_UNO -DF_CPU=16000000L -DARDUINO_ARCH_AVR -DARDUINO=10808 -Iinclude -Isrc -I/home/aryanj/.platformio/packages/framework-arduino-avr/cores/arduino -I/home/aryanj/.platformio/packages/framework-arduino-avr/variants/standard src/pwm.cpp",
-        "directory": "/home/aryanj/Projects/avr-ultrasonic-radar",
-        "file": "src/pwm.cpp",
-        "output": ".pio/build/uno/src/pwm.cpp.o"
-    },
-    {
-        "command": "/home/aryanj/.platformio/packages/toolchain-atmelavr/bin/avr-g++ -o .pio/build/uno/src/servo.cpp.o -c -fno-exceptions -fno-threadsafe-statics -fpermissive -std=gnu++11 -mmcu=atmega328p -Os -Wall -ffunction-sections -fdata-sections -flto -DPLATFORMIO=60119 -DARDUINO_AVR_UNO -DF_CPU=16000000L -DARDUINO_ARCH_AVR -DARDUINO=10808 -Iinclude -Isrc -I/home/aryanj/.platformio/packages/framework-arduino-avr/cores/arduino -I/home/aryanj/.platformio/packages/framework-arduino-avr/variants/standard src/servo.cpp",
-        "directory": "/home/aryanj/Projects/avr-ultrasonic-radar",
-        "file": "src/servo.cpp",
-        "output": ".pio/build/uno/src/servo.cpp.o"
-    },
-    {
-        "command": "/home/aryanj/.platformio/packages/toolchain-atmelavr/bin/avr-g++ -o .pio/build/uno/src/timer.cpp.o -c -fno-exceptions -fno-threadsafe-statics -fpermissive -std=gnu++11 -mmcu=atmega328p -Os -Wall -ffunction-sections -fdata-sections -flto -DPLATFORMIO=60119 -DARDUINO_AVR_UNO -DF_CPU=16000000L -DARDUINO_ARCH_AVR -DARDUINO=10808 -Iinclude -Isrc -I/home/aryanj/.platformio/packages/framework-arduino-avr/cores/arduino -I/home/aryanj/.platformio/packages/framework-arduino-avr/variants/standard src/timer.cpp",
-        "directory": "/home/aryanj/Projects/avr-ultrasonic-radar",
-        "file": "src/timer.cpp",
-        "output": ".pio/build/uno/src/timer.cpp.o"
-    },
-    {
-        "command": "/home/aryanj/.platformio/packages/toolchain-atmelavr/bin/avr-g++ -o .pio/build/uno/src/ultrasonic.cpp.o -c -fno-exceptions -fno-threadsafe-statics -fpermissive -std=gnu++11 -mmcu=atmega328p -Os -Wall -ffunction-sections -fdata-sections -flto -DPLATFORMIO=60119 -DARDUINO_AVR_UNO -DF_CPU=16000000L -DARDUINO_ARCH_AVR -DARDUINO=10808 -Iinclude -Isrc -I/home/aryanj/.platformio/packages/framework-arduino-avr/cores/arduino -I/home/aryanj/.platformio/packages/framework-arduino-avr/variants/standard src/ultrasonic.cpp",
-        "directory": "/home/aryanj/Projects/avr-ultrasonic-radar",
-        "file": "src/ultrasonic.cpp",
-        "output": ".pio/build/uno/src/ultrasonic.cpp.o"
-    },
-    {
-        "command": "/home/aryanj/.platformio/packages/toolchain-atmelavr/bin/avr-g++ -o .pio/build/uno/src/usart.cpp.o -c -fno-exceptions -fno-threadsafe-statics -fpermissive -std=gnu++11 -mmcu=atmega328p -Os -Wall -ffunction-sections -fdata-sections -flto -DPLATFORMIO=60119 -DARDUINO_AVR_UNO -DF_CPU=16000000L -DARDUINO_ARCH_AVR -DARDUINO=10808 -Iinclude -Isrc -I/home/aryanj/.platformio/packages/framework-arduino-avr/cores/arduino -I/home/aryanj/.platformio/packages/framework-arduino-avr/variants/standard src/usart.cpp",
-        "directory": "/home/aryanj/Projects/avr-ultrasonic-radar",
-        "file": "src/usart.cpp",
-        "output": ".pio/build/uno/src/usart.cpp.o"
+        "file": "src/ui/manager.cpp",
+        "output": ".pio/build/uno/src/ui/manager.cpp.o"
     },
     {
         "command": "/home/aryanj/.platformio/packages/toolchain-atmelavr/bin/avr-g++ -o .pio/build/uno/src/utils.cpp.o -c -fno-exceptions -fno-threadsafe-statics -fpermissive -std=gnu++11 -mmcu=atmega328p -Os -Wall -ffunction-sections -fdata-sections -flto -DPLATFORMIO=60119 -DARDUINO_AVR_UNO -DF_CPU=16000000L -DARDUINO_ARCH_AVR -DARDUINO=10808 -Iinclude -Isrc -I/home/aryanj/.platformio/packages/framework-arduino-avr/cores/arduino -I/home/aryanj/.platformio/packages/framework-arduino-avr/variants/standard src/utils.cpp",

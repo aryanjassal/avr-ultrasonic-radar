@@ -1,7 +1,8 @@
 #pragma once
 
-#include "pin.hpp"
 #include <stdint.h>
+
+#include "drivers/pin.hpp"
 
 class Ultrasonic {
   OutputPin trig;
@@ -11,10 +12,10 @@ class Ultrasonic {
   uint16_t lastDistance = 0;
   bool measurementReady = false;
 
-public:
-  Ultrasonic(const PinDescriptor &trigPin, const PinDescriptor &echoPin);
+ public:
+  Ultrasonic(const PinDescriptor& trigPin, const PinDescriptor& echoPin);
 
-  void trigger(); // Start measurement
+  void trigger();  // Start measurement
   bool ready() const;
   uint16_t distance_mm() const;
 };

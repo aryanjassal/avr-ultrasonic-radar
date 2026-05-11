@@ -1,21 +1,20 @@
-#include "ultrasonic.hpp"
-#include "timer.hpp"
+#include "hardware/ultrasonic.hpp"
 
-Ultrasonic::Ultrasonic(const PinDescriptor &trigPin,
-                       const PinDescriptor &echoPin)
+#include "drivers/timer.hpp"
+
+Ultrasonic::Ultrasonic(const PinDescriptor& trigPin,
+                       const PinDescriptor& echoPin)
     : trig(trigPin), echo(echoPin) {}
 
 void Ultrasonic::trigger() {
   // Rate-limit pinging
-  if (millis() - lastPing < 60)
-    return;
+  if (millis() - lastPing < 60) return;
 
   // Send trigger pulse (10 µs)
   lastPing = millis();
   trig.high();
   uint32_t start = micros();
-  while (micros() - start < 10)
-    ;
+  while (micros() - start < 10);
   trig.low();
 
   // Wait for echo HIGH
