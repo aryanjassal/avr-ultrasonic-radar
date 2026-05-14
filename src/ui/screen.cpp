@@ -1,6 +1,25 @@
 #include "ui/screen.hpp"
 #include "drivers/display.hpp"
 
+void Screen::moveCursorUp() {
+  // Move cursor
+  if (cursorLine == 0) return;
+  cursorLine--;
+  // Move viewport
+  if (cursorLine < scrollOffset) { scrollOffset = cursorLine; }
+}
+
+void Screen::moveCursorDown() {
+  // Move cursor
+  uint8_t total = totalHeight();
+  if (cursorLine + 1 >= total) return;
+  cursorLine++;
+  // Move viewport
+  if (cursorLine >= scrollOffset + Display::VIEWPORT_HEIGHT) {
+    scrollOffset = cursorLine - Display::VIEWPORT_HEIGHT + 1;
+  }
+}
+
 void Screen::addWidget(Widget* widget) {
   if (widgetCount >= MAX_WIDGETS) return;
   widgets[widgetCount++] = widget;
@@ -51,9 +70,9 @@ void Screen::handleEvent(UIEvent event) {
 
   // Up and down events correspond to scrolling by default.
   if (event == UIEvent::Up) {
-    if (scrollOffset < maxScroll()) { scrollOffset++; }
+    moveCursorDown();
   } else if (event == UIEvent::Down) {
-    if (scrollOffset > 0) { scrollOffset--; }
+    moveCursorUp();
   }
 }
 
@@ -64,4 +83,14 @@ void Screen::draw() {
     widgets[i]->draw(y, scrollOffset);
     y += widgets[i]->height();
   }
+
+  // Render cursor
+  Display::drawChar(0, 0, ' ');
+  Display::drawChar(0, 1, ' ');
+  int16_t cursorY = (int16_t)cursorLine - (int16_t)scrollOffset;
+  if (cursorY < Display::VIEWPORT_Y_ORIGIN ||
+      cursorY >= Display::VIEWPORT_Y_END) {
+    return;
+  }
+  Display::drawChar(0, cursorY, '>');
 }

@@ -56,8 +56,13 @@ class Screen {
   // to a counter to get the starting of the next widget, and so on.
   Widget* widgetStartingAt(uint8_t line);
 
+  // Cursor helpers
+  void moveCursorUp();
+  void moveCursorDown();
+
   Widget* widgets[MAX_WIDGETS];
   uint8_t widgetCount = 0;
+  uint8_t cursorLine = 0;
   uint8_t scrollOffset = 0;
   Widget* activeWidget = nullptr;
 };

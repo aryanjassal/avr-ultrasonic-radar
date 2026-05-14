@@ -14,7 +14,7 @@ ISR(USART_RX_vect) {
 
 void USART::init(uint32_t baud, bool doubleSpeed) {
   UCSR0A = doubleSpeed ? (1 << U2X0) : 0;
-  UBRR0 = (uint16_t)(F_CPU / (doubleSpeed ? 16ul : 8ul * baud) - 1);
+  UBRR0 = (uint16_t)(F_CPU / (doubleSpeed ? 8ul : 16ul * baud) - 1);
   UCSR0B = (1 << TXEN0) | (1 << RXEN0) | (1 << RXCIE0);
   UCSR0C = (1 << UCSZ01) | (1 << UCSZ00);
 }
