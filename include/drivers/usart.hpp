@@ -3,7 +3,7 @@
 
 class USART {
 public:
-  static void init(uint32_t baud);
+  static void init(uint32_t baud, bool doubleSpeed = false);
   static void flush();
   static void print(const char *str);
   static void print(char c);

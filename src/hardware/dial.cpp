@@ -2,6 +2,7 @@
 
 #include <avr/interrupt.h>
 #include <avr/io.h>
+#include "drivers/timer.hpp"
 
 #define ENC_PORT PORTD
 #define ENC_PIN PIND
@@ -23,6 +24,14 @@ static volatile int8_t pending_movement = 0;
 // Transition lookup table
 static const int8_t TRANSITION_TABLE[16] = {0,  -1, 1, 0, 1, 0, 0,  -1,
                                             -1, 0,  0, 1, 0, 1, -1, 0};
+
+// Button debounce state
+static uint8_t stable_button_state = 1;
+static uint8_t last_button_reading = 1;
+
+static uint32_t last_debounce_time = 0;
+
+static constexpr uint16_t DEBOUNCE_MS = 25;
 
 void Dial::init() {
   // Inputs and pullups
@@ -76,6 +85,29 @@ int8_t Dial::poll() {
 }
 
 uint8_t Dial::pressed() { return !(ENC_PIN & (1 << ENC_SW)); }
+
+uint8_t Dial::clicked() {
+  uint8_t reading = (ENC_PIN & (1 << ENC_SW)) ? 1 : 0;
+
+  // State changed -> restart debounce timer
+  if (reading != last_button_reading) {
+    last_debounce_time = millis();
+    last_button_reading = reading;
+  }
+
+  // Has state remained stable long enough?
+  if ((millis() - last_debounce_time) >= DEBOUNCE_MS) {
+    // Stable state changed
+    if (reading != stable_button_state) {
+      stable_button_state = reading;
+
+      // Active low button: emit ONLY on press edge
+      if (stable_button_state == 0) { return 1; }
+    }
+  }
+
+  return 0;
+}
 
 ISR(INT0_vect) { handleInterrupt(); }
 

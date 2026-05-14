@@ -4,16 +4,21 @@
 
 namespace Display {
 
+// Was the framebuffer modified?
 bool dirty = false;
 
+// Using double-buffering to render data
 char front[HEIGHT][WIDTH];
 char back[HEIGHT][WIDTH];
 
+// The active LCD panel being used as the display
 static LCD* lcd = nullptr;
 
+// Cursor position within the screen bounds
 static uint8_t cursor_x = 0;
 static uint8_t cursor_y = 0;
 
+// Fill the whole buffer with the specified character
 static void fill(char buffer[HEIGHT][WIDTH], char c) {
   for (uint8_t y = 0; y < HEIGHT; y++) {
     for (uint8_t x = 0; x < WIDTH; x++) { buffer[y][x] = c; }
@@ -21,16 +26,17 @@ static void fill(char buffer[HEIGHT][WIDTH], char c) {
 }
 
 void init(LCD* display) {
+  // Set the active panel for the display
   lcd = display;
 
+  // Initialise framebuffers and cursor positions
   fill(front, '\0');
   fill(back, ' ');
-
   cursor_x = 0;
   cursor_y = 0;
 
-  dirty = true;
-  forceRender();
+  // Force-render the framebuffer
+  render(true);
 }
 
 void clearBuffer() {
@@ -47,21 +53,6 @@ void clear() {
   dirty = false;
 }
 
-void home() {
-  cursor_x = 0;
-  cursor_y = 0;
-
-  if (lcd) lcd->home();
-}
-
-void setCursor(uint8_t x, uint8_t y) {
-  if (x >= WIDTH) x = WIDTH - 1;
-  if (y >= HEIGHT) y = HEIGHT - 1;
-
-  cursor_x = x;
-  cursor_y = y;
-}
-
 void drawChar(uint8_t x, uint8_t y, char c) {
   if (x >= WIDTH || y >= HEIGHT) return;
 
@@ -69,27 +60,6 @@ void drawChar(uint8_t x, uint8_t y, char c) {
     back[y][x] = c;
     dirty = true;
   }
-}
-
-void write(char character) {
-  if (character == '\n') {
-    cursor_x = 0;
-    if (cursor_y + 1 < HEIGHT) cursor_y++;
-    return;
-  }
-
-  if (cursor_x >= WIDTH || cursor_y >= HEIGHT) return;
-  drawChar(cursor_x, cursor_y, character);
-  cursor_x++;
-
-  if (cursor_x >= WIDTH) {
-    cursor_x = 0;
-    if (cursor_y + 1 < HEIGHT) cursor_y++;
-  }
-}
-
-void print(const char* str) {
-  while (*str) { write(*str++); }
 }
 
 void drawText(uint8_t x, uint8_t y, const char* str) {
@@ -104,16 +74,16 @@ void drawText(uint8_t x, uint8_t y, const char* str) {
 
 void clearLine(uint8_t y) {
   if (y >= HEIGHT) return;
-
   for (uint8_t x = 0; x < WIDTH; x++) { drawChar(x, y, ' '); }
 }
 
-void render() {
-  if (!lcd || !dirty) return;
+void render(bool force) {
+  if (!lcd || (!force && !dirty)) return;
 
+  // Diff each position and update only if contents changed
   for (uint8_t y = 0; y < HEIGHT; y++) {
     for (uint8_t x = 0; x < WIDTH; x++) {
-      if (front[y][x] != back[y][x]) {
+      if (force || front[y][x] != back[y][x]) {
         lcd->setCursor(x, y);
         lcd->print(back[y][x]);
         front[y][x] = back[y][x];
@@ -122,17 +92,6 @@ void render() {
   }
 
   dirty = false;
-}
-
-void forceRender() {
-  if (!lcd) return;
-
-  for (uint8_t y = 0; y < HEIGHT; y++) {
-    for (uint8_t x = 0; x < WIDTH; x++) { front[y][x] = '\0'; }
-  }
-
-  dirty = true;
-  render();
 }
 
 }  // namespace Display
