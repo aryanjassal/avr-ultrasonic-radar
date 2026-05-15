@@ -1,12 +1,14 @@
 #include "ui/manager.hpp"
 #include "drivers/display.hpp"
 #include "drivers/timer.hpp"
+#include "hardware/dial.hpp"
 
 // The display will be rendered every 100ms at most to minimise rendering
 // load.
 static constexpr uint32_t RENDER_INTERVAL_MS = 100;
 
 void UIManager::init(Screen* initialScreen) {
+  Dial::reset();
   current = initialScreen;
   redrawRequested = true;
 
@@ -22,8 +24,8 @@ void UIManager::setScreen(Screen* screen) {
 
   current = screen;
   redrawRequested = true;
-
   Display::clearBuffer();
+  Dial::reset();
 
   if (current) {
     current->onEnter();

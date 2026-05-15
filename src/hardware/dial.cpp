@@ -84,6 +84,14 @@ int8_t Dial::poll() {
   return movement;
 }
 
+void Dial::reset() {
+  uint8_t sreg = SREG;
+  cli();
+  pending_movement = 0;
+  accumulator = 0;
+  SREG = sreg;
+}
+
 uint8_t Dial::pressed() { return !(ENC_PIN & (1 << ENC_SW)); }
 
 uint8_t Dial::clicked() {

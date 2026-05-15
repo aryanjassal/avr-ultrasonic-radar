@@ -25,6 +25,17 @@ class Screen {
   // through to the widget.
   virtual void handleEvent(UIEvent event);
 
+  // The cursor on the left edge of the screen is enabled by default. It can be
+  // disabled, which makes sense for loading screens or screens with no
+  // interaction. Note that this does not remove the gutter, only disable the
+  // cursor rendering.
+  void disableCursor(bool state) { cursorDisabled = state; };
+
+  // By default, a screen can scroll using the cursor to allow viewing more than
+  // two lines at a time. For static screens like a loading screen, this can be
+  // disabled.
+  void disableScroll(bool state) { scrollDisabled = state; };
+
   // Every time the UI manager is updated, the currently active screen is also
   // updated. Note that the UI manager might trigger updates multiple times per
   // loop. To perform time-sensitive operations, use delta-time-like intervals
@@ -61,11 +72,18 @@ class Screen {
   // currently in to manage focus.
   Widget* getNearestWidget(uint8_t line);
 
+  // Get the line at which the target widget starts at. Used to calculate the
+  // offset to snap the widget to the center of the viewport.
   uint8_t widgetStartLine(Widget* target);
 
+  // Data
   Widget* widgets[MAX_WIDGETS];
   uint8_t widgetCount = 0;
   uint8_t cursorLine = 0;
   uint8_t scrollOffset = 0;
   Widget* activeWidget = nullptr;
+
+  // Behaviour state
+  bool cursorDisabled = false;
+  bool scrollDisabled = false;
 };

@@ -2,6 +2,7 @@
 #include <avr/io.h>
 
 #include "application/calibrate.hpp"
+#include "application/loading.hpp"
 #include "drivers/display.hpp"
 #include "drivers/pin.hpp"
 #include "drivers/timer.hpp"
@@ -15,10 +16,19 @@ int main(void) {
   LCD display(D8, A1, A2, A3, A4, A5);
   Display::init(&display);
 
+  // Initialise the loading screen while the system prepares
   UIManager ui;
+  LoadingScreen loading;
+  ui.init(&loading);
+
+  // Set up alternate screens
   CalibrationScreen calibrate;
 
-  ui.init(&calibrate);
+  // Simulate expensive screen setup
+  delay(5000);
+
+  // Swap to actual program screen
+  ui.setScreen(&calibrate);
 
   while (true) {
     UIEvent event = UIEvent::None;

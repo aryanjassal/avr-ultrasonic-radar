@@ -7,8 +7,15 @@ namespace Dial {
 // and thus is fixed to 1 per system.
 void init();
 
-// Returns accumulated detent movement
+// Returns accumulated detent movement. The dial stores movement data. As such,
+// if the dial state is not read, then it can store movement and returns it when
+// it *is* read. This can cause issues when the dial movement is being
+// purposefully ignored. In such cases, call `Dial::reset()` to clear stored
+// movement data.
 int8_t poll();
+
+// Resets accumulated movement.
+void reset();
 
 // Pressed returns the state of the button. To detect clicks, where only the
 // rising edge is detected and debounced, use the `clicked()` method.

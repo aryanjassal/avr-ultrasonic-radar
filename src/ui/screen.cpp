@@ -78,6 +78,9 @@ void Screen::handleEvent(UIEvent event) {
     return;
   }
 
+  // Exit early if scrolling is undesired.
+  if (scrollDisabled) return;
+
   // Up and down events correspond to scrolling by default.
   if (event == UIEvent::Up) {
     // Move cursor
@@ -105,7 +108,8 @@ void Screen::draw() {
     y += widgets[i]->height();
   }
 
-  // Render cursor
+  // Exit early if cursor shouldn't be rendered, otherwise render cursor.
+  if (cursorDisabled) return;
   Display::drawChar(0, 0, ' ');
   Display::drawChar(0, 1, ' ');
   int16_t cursorY = (int16_t)cursorLine - (int16_t)scrollOffset;
