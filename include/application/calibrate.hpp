@@ -20,9 +20,9 @@ class CalibrationScreen : public Screen {
   CalibrationScreen()
       : title("CALIBRATE"),
         body(
-            "Before using the system, please calibrate it. Click to edit "
-            "value, click again to save. Next to continue. Angles are in "
-            "degrees, distances in mm."),
+            "Before using the system, please calibrate it. Click to edit a "
+            "value. Click again to save. All angles are in degrees and "
+            "distances in mm."),
         minAngleInput("MIN_ANGLE", &minAngle, 0, 80),
         maxAngleInput("MAX_ANGLE", &maxAngle, 100, 180) {
     addWidget(&title);

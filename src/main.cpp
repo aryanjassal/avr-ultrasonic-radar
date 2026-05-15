@@ -23,6 +23,8 @@ int main(void) {
   while (true) {
     UIEvent event = UIEvent::None;
 
+    // Handle state change. Each dial state is exclusive, and click takes
+    // precedence to avoid accidental scrolling during clicking.
     int8_t delta = Dial::poll();
     if (Dial::clicked())
       event = UIEvent::Click;

@@ -2,7 +2,7 @@
 
 #include <stdint.h>
 
-#include "event.hpp"
+#include "ui/event.hpp"
 
 class Widget {
  public:

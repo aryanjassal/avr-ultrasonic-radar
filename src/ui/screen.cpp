@@ -1,25 +1,6 @@
 #include "ui/screen.hpp"
 #include "drivers/display.hpp"
 
-void Screen::moveCursorUp() {
-  // Move cursor
-  if (cursorLine == 0) return;
-  cursorLine--;
-  // Move viewport
-  if (cursorLine < scrollOffset) { scrollOffset = cursorLine; }
-}
-
-void Screen::moveCursorDown() {
-  // Move cursor
-  uint8_t total = totalHeight();
-  if (cursorLine + 1 >= total) return;
-  cursorLine++;
-  // Move viewport
-  if (cursorLine >= scrollOffset + Display::VIEWPORT_HEIGHT) {
-    scrollOffset = cursorLine - Display::VIEWPORT_HEIGHT + 1;
-  }
-}
-
 void Screen::addWidget(Widget* widget) {
   if (widgetCount >= MAX_WIDGETS) return;
   widgets[widgetCount++] = widget;
@@ -46,6 +27,30 @@ Widget* Screen::widgetStartingAt(uint8_t line) {
   return nullptr;
 }
 
+Widget* Screen::getNearestWidget(uint8_t line) {
+  uint8_t y = 0;
+  Widget* last = nullptr;
+
+  for (uint8_t i = 0; i < widgetCount; i++) {
+    Widget* widget = widgets[i];
+    if (y > line) break;
+    last = widget;
+    y += widget->height();
+  }
+
+  return last;
+}
+
+uint8_t Screen::widgetStartLine(Widget* target) {
+  uint8_t y = 0;
+  for (uint8_t i = 0; i < widgetCount; i++) {
+    if (widgets[i] == target) { return y; }
+    y += widgets[i]->height();
+  }
+
+  return 0;
+}
+
 void Screen::handleEvent(UIEvent event) {
   if (widgetCount == 0) return;
 
@@ -58,9 +63,14 @@ void Screen::handleEvent(UIEvent event) {
 
   // If the event is a click, then attempt passing the event through.
   if (event == UIEvent::Click) {
-    Widget* widget = widgetStartingAt(scrollOffset);
-
+    Widget* widget = getNearestWidget(cursorLine);
     if (widget && widget->selectable()) {
+      // Snap viewport and cursor to widget start
+      uint8_t start = widgetStartLine(widget);
+      cursorLine = start;
+      scrollOffset = start;
+
+      // Select widget
       activeWidget = widget;
       activeWidget->handleEvent(event);
     }
@@ -70,9 +80,20 @@ void Screen::handleEvent(UIEvent event) {
 
   // Up and down events correspond to scrolling by default.
   if (event == UIEvent::Up) {
-    moveCursorDown();
+    // Move cursor
+    uint8_t total = totalHeight();
+    if (cursorLine + 1 >= total) return;
+    cursorLine++;
+    // Move viewport
+    if (cursorLine >= scrollOffset + Display::VIEWPORT_HEIGHT) {
+      scrollOffset = cursorLine - Display::VIEWPORT_HEIGHT + 1;
+    }
   } else if (event == UIEvent::Down) {
-    moveCursorUp();
+    // Move cursor
+    if (cursorLine == 0) return;
+    cursorLine--;
+    // Move viewport
+    if (cursorLine < scrollOffset) { scrollOffset = cursorLine; }
   }
 }
 

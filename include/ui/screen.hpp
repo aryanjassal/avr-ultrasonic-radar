@@ -56,9 +56,12 @@ class Screen {
   // to a counter to get the starting of the next widget, and so on.
   Widget* widgetStartingAt(uint8_t line);
 
-  // Cursor helpers
-  void moveCursorUp();
-  void moveCursorDown();
+  // Get the neraest widget relative to the line. The search only looks
+  // backwards and not forwards. Useful to find which widget the cursor is
+  // currently in to manage focus.
+  Widget* getNearestWidget(uint8_t line);
+
+  uint8_t widgetStartLine(Widget* target);
 
   Widget* widgets[MAX_WIDGETS];
   uint8_t widgetCount = 0;
