@@ -5,9 +5,14 @@
 #include "ui/event.hpp"
 #include "ui/widget.hpp"
 
+// Forward-declare navigator to avoid circular dependency.
+class Navigator;
+
 class Screen {
  public:
   static constexpr uint8_t MAX_WIDGETS = 16;
+
+  Screen(Screen* parent) : parent(parent) {}
 
   virtual ~Screen() = default;
 
@@ -36,6 +41,10 @@ class Screen {
   // disabled.
   void disableScroll(bool state) { scrollDisabled = state; };
 
+  // Navigators are required for any screen transitions. The navigator is passed
+  // to the widget, which can use it to change the currently active screen.
+  void setNavigator(Navigator* navigator) { this->navigator = navigator; };
+
   // Every time the UI manager is updated, the currently active screen is also
   // updated. Note that the UI manager might trigger updates multiple times per
   // loop. To perform time-sensitive operations, use delta-time-like intervals
@@ -51,6 +60,9 @@ class Screen {
   // hit. Widgets must be inserted in order, and cannot be removed once
   // inserted.
   void addWidget(Widget* widget);
+
+  // The parent of this screen.
+  Screen* parent = nullptr;
 
  private:
   // Calculate and return the maximum height of all the widgets within the
@@ -82,6 +94,7 @@ class Screen {
   uint8_t cursorLine = 0;
   uint8_t scrollOffset = 0;
   Widget* activeWidget = nullptr;
+  Navigator* navigator = nullptr;
 
   // Behaviour state
   bool cursorDisabled = false;

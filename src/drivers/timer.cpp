@@ -3,42 +3,46 @@
 
 #include "drivers/timer.hpp"
 
-volatile uint32_t timer0_overflow_count = 0;
 volatile uint32_t timer0_millis = 0;
 
-ISR(TIMER0_OVF_vect) {
-  // There is a 24us drift per ms, but the accuracy is good enough.
-  timer0_overflow_count++;
-  timer0_millis += 1;
-}
+ISR(TIMER0_COMPA_vect) { timer0_millis += 1; }
 
 void Timer::init() {
-  TCCR0A = 0;                          // Normal mode
+  TCCR0A = (1 << WGM01);               // CTC mode
   TCCR0B = (1 << CS01) | (1 << CS00);  // Prescaler 64
-  TIMSK0 = (1 << TOIE0);               // Enable overflow interrupt
+  OCR0A = 249;                         // 250 ticks @ 250kHz = 1ms
+  TIMSK0 = (1 << OCIE0A);              // Enable compare interrupt
   sei();                               // Enable interrupts
 }
 
 uint32_t Timer::millis() {
   uint32_t t;
+
+  uint8_t sreg = SREG;
   cli();
   t = timer0_millis;
-  sei();
+  SREG = sreg;
+
   return t;
 }
 
 uint32_t Timer::micros() {
-  uint32_t overflows;
+  uint32_t ms;
   uint8_t t;
+  uint8_t sreg = SREG;
 
-  // Guarantee atomicity
   cli();
-  overflows = timer0_overflow_count;
+  ms = timer0_millis;
   t = TCNT0;
-  if ((TIFR0 & (1 << TOV0)) && (t < 255)) overflows++;
-  sei();
 
-  return ((overflows << 8) + t) * 4;
+  // Pending compare match
+  if ((TIFR0 & (1 << OCF0A)) && t < OCR0A) { ms++; }
+  SREG = sreg;
+
+  // Timer tick:
+  // 16MHz / 64 = 250kHz
+  // 1 tick = 4us
+  return (ms * 1000ul) + (t * 4ul);
 }
 
 void Timer::delay(uint32_t ms) {

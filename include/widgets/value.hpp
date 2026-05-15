@@ -3,6 +3,7 @@
 #include <stdlib.h>
 
 #include "drivers/display.hpp"
+#include "ui/navigator.hpp"
 #include "ui/widget.hpp"
 
 /**
@@ -13,8 +14,11 @@
 template <typename T>
 class ValueWidget : public Widget {
  public:
-  ValueWidget(const char* label, T* value, T minValue, T maxValue)
-      : label(label),
+  ValueWidget(const char* label, T* value, T minValue, T maxValue,
+              void (*onSelectCallback)(Navigator* navigator) = nullptr,
+              void (*onDeselectCallback)(Navigator* navigator) = nullptr)
+      : Widget(onSelectCallback, onDeselectCallback),
+        label(label),
         value(value),
         minValue(minValue),
         maxValue(maxValue),
@@ -26,9 +30,10 @@ class ValueWidget : public Widget {
 
   bool captureEvents() override { return capturing; }
 
-  void handleEvent(UIEvent event) override {
+  void handleEvent(UIEvent event, Navigator* navigator) override {
     if (event == UIEvent::Click) {
       capturing = !capturing;
+      if (!capturing) { onDeselect(navigator); }
       return;
     }
 

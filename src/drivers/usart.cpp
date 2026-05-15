@@ -1,5 +1,3 @@
-#define F_CPU 16000000ul
-
 #include "drivers/usart.hpp"
 
 #include <avr/interrupt.h>

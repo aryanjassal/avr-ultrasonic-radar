@@ -1,5 +1,7 @@
 #include "ui/screen.hpp"
+
 #include "drivers/display.hpp"
+#include "ui/navigator.hpp"
 
 void Screen::addWidget(Widget* widget) {
   if (widgetCount >= MAX_WIDGETS) return;
@@ -56,7 +58,7 @@ void Screen::handleEvent(UIEvent event) {
 
   // If a widget is active, then pass all events through.
   if (activeWidget && activeWidget->captureEvents()) {
-    activeWidget->handleEvent(event);
+    activeWidget->handleEvent(event, this->navigator);
     if (!activeWidget->captureEvents()) { activeWidget = nullptr; }
     return;
   }
@@ -64,6 +66,9 @@ void Screen::handleEvent(UIEvent event) {
   // If the event is a click, then attempt passing the event through.
   if (event == UIEvent::Click) {
     Widget* widget = getNearestWidget(cursorLine);
+
+    // If the widget is selectable, then set it as the active widget. Otherwise,
+    // only pass the click event through.
     if (widget && widget->selectable()) {
       // Snap viewport and cursor to widget start
       uint8_t start = widgetStartLine(widget);
@@ -72,7 +77,10 @@ void Screen::handleEvent(UIEvent event) {
 
       // Select widget
       activeWidget = widget;
-      activeWidget->handleEvent(event);
+      activeWidget->onSelect(this->navigator);
+      activeWidget->handleEvent(event, this->navigator);
+    } else if (widget) {
+      widget->handleEvent(event, this->navigator);
     }
 
     return;

@@ -9,7 +9,7 @@ class LoadingScreen : public Screen {
   TextWidget text;
 
  public:
-  LoadingScreen() : text("SONIC RADAR\nLoading...") {
+  LoadingScreen() : Screen(nullptr), text("SONIC RADAR\nLoading...") {
     disableCursor(true);
     disableScroll(true);
     addWidget(&text);

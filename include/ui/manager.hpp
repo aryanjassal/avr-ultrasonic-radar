@@ -3,9 +3,10 @@
 #include <stdint.h>
 
 #include "ui/event.hpp"
+#include "ui/navigator.hpp"
 #include "ui/screen.hpp"
 
-class UIManager {
+class UIManager : Navigator {
  private:
   // Currently active screen
   Screen* current = nullptr;
@@ -27,7 +28,7 @@ class UIManager {
   // Replace the currently active screen with another screen. The previous
   // screen can execute the `Screen::onExit()` event handler, and the new screen
   // will be rendered immediately. This bypasses the render interval.
-  void setScreen(Screen* screen);
+  void setScreen(Screen* screen) override;
 
   // Request a redraw at the next update cycle.
   void requestRedraw();

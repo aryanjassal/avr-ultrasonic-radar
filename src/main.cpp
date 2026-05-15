@@ -5,7 +5,9 @@
 #include "application/loading.hpp"
 #include "drivers/display.hpp"
 #include "drivers/pin.hpp"
+#include "drivers/radar.hpp"
 #include "drivers/timer.hpp"
+#include "drivers/usart.hpp"
 #include "hardware/dial.hpp"
 #include "hardware/lcd.hpp"
 #include "ui/manager.hpp"
@@ -16,7 +18,9 @@ int main(void) {
   LCD display(D8, A1, A2, A3, A4, A5);
   Display::init(&display);
 
-  // Initialise the loading screen while the system prepares
+  // Initialise the loading screen while the system prepares. The loading screen
+  // is displayed before the main loop starts, so it is impossible for this
+  // screen to get events.
   UIManager ui;
   LoadingScreen loading;
   ui.init(&loading);
@@ -24,17 +28,25 @@ int main(void) {
   // Set up alternate screens
   CalibrationScreen calibrate;
 
-  // Simulate expensive screen setup
-  delay(5000);
+  // Set up sensors and peripherals
+  USART::init(57600);
+  RadarController::init(D5);
+  RadarController::setCallback([](uint8_t angle, uint16_t distance) {
+    USART::print(">angle:");
+    USART::print_int32(angle);
+    USART::println();
+    USART::print(">distance:");
+    USART::print_int32(distance);
+    USART::println();
+  });
 
   // Swap to actual program screen
   ui.setScreen(&calibrate);
 
   while (true) {
-    UIEvent event = UIEvent::None;
-
     // Handle state change. Each dial state is exclusive, and click takes
     // precedence to avoid accidental scrolling during clicking.
+    UIEvent event = UIEvent::None;
     int8_t delta = Dial::poll();
     if (Dial::clicked())
       event = UIEvent::Click;
@@ -43,6 +55,8 @@ int main(void) {
     else if (delta < 0)
       event = UIEvent::Up;
 
+    // Update systems
     ui.update(event);
+    RadarController::update();
   }
 }

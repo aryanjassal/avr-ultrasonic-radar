@@ -2,16 +2,24 @@
 
 #include <stdint.h>
 
-#define SERVO_MIN_ANGLE 0
-#define SERVO_MAX_ANGLE 180
-#define SERVO_MIN_US 500
-#define SERVO_MAX_US 2500
+enum class ServoState : uint8_t { Idle, Moving };
 
-class Servo {
-public:
-  // Servo is initialised on Digital 9 pin of the board.
-  static void init();
+namespace Servo {
+// The servo owns Timer1 configuration. The PWM pin used for this is D10.
+// Configuration like setting up the prescaler happens with the servo
+// initialisation.
+void init();
 
-  // Angle must be between 0 and 180 degrees.
-  static void write_angle(uint8_t angle);
-};
+// Target angle in degrees. Must be between 0 and 180.
+void write_angle(uint8_t angle);
+
+// Current commanded angle.
+uint8_t angle();
+
+// Update movement state.
+void update();
+
+// Whether servo is currently moving.
+bool moving();
+
+}  // namespace Servo

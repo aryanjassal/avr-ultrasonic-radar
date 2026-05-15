@@ -56,7 +56,7 @@ static uint8_t calculateHeight(const char* text) {
 }
 
 TextWidget::TextWidget(const char* text)
-    : text(text), textHeight(calculateHeight(text)) {}
+    : Widget(nullptr, nullptr), text(text), textHeight(calculateHeight(text)) {}
 
 void TextWidget::setText(const char* text) {
   this->text = text;
