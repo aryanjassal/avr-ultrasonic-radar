@@ -60,9 +60,9 @@ void Servo::write_angle(uint8_t angle) {
 
 void Servo::update() {
   if (servoState == ServoState::Moving) {
-    // Assuming 50ms per movement event. Should be fine for the small increments
-    // for the radar sweep.
-    if (millis() - movementStarted >= 50) {
+    // Assuming 100ms per movement event. Should be fine for the small
+    // increments for the radar sweep.
+    if (millis() - movementStarted >= 100) {
       currentAngle = targetAngle;
       servoState = ServoState::Idle;
     }

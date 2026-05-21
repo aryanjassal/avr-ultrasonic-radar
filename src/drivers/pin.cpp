@@ -36,18 +36,7 @@ InputPin::InputPin(const PinDescriptor& d, bool pullup)
   }
 }
 
-bool InputPin::read() const {
-  volatile uint8_t* src = nullptr;
-  if (mPin == &PINB)
-    src = &PINB;
-  else if (mPin == &PINC)
-    src = &PINC;
-  else if (mPin == &PIND)
-    src = &PIND;
-  return (*src & mMask) != 0;
-}
-
-bool InputPin::readRaw() const { return (*mPin & mMask) != 0; }
+bool InputPin::read() const { return (*mPin & mMask) != 0; }
 
 // ADC pins
 

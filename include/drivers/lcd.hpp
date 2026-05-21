@@ -4,7 +4,7 @@
 
 #include <stdint.h>
 
-namespace Display {
+namespace LCDDisplay {
 
 // Display resolution to build a framebuffer
 constexpr uint8_t WIDTH = 16;
@@ -23,14 +23,14 @@ constexpr uint8_t VIEWPORT_Y_END = VIEWPORT_Y_ORIGIN + VIEWPORT_HEIGHT;
 extern bool dirty;
 
 // Initialise the display with the given LCD. Note that the LCD should be
-// initialised already and the initialisation function will not be called again.
+// initialised already.
 void init(LCD* display);
 
 // Clears the back buffer and resets the cursor position. Note that only the
 // buffer is cleared and the dirty flag set. As such, the buffer can be written
 // to, or rendered.
 //
-// Refer to `Display::clear()` to clear the LCD screen directly.
+// Refer to `LCDDisplay::clear()` to clear the LCD screen directly.
 void clearBuffer();
 
 // Writes a character at the specified x and y coordinate to the framebuffer.
@@ -63,4 +63,4 @@ void render(bool force = false);
 // modifying the back buffer for the next render.
 void clear();
 
-}  // namespace Display
+}  // namespace LCDDisplay

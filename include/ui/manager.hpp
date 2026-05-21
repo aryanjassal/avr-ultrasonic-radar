@@ -22,7 +22,7 @@ class UIManager : Navigator {
   // a booting screen while the system prepares itself. Set to `nullptr` to not
   // set an initial screen. If provided, the `Screen::onEnter()` event handler
   // will be executed, immediately followed by `Screen::draw()` and
-  // `Display::render()`. This bypasses the render interval.
+  // `LCDDisplay::render()`. This bypasses the render interval.
   void init(Screen* initialScreen);
 
   // Replace the currently active screen with another screen. The previous

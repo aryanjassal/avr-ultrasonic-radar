@@ -1,6 +1,6 @@
 #include "ui/screen.hpp"
 
-#include "drivers/display.hpp"
+#include "drivers/lcd.hpp"
 #include "ui/navigator.hpp"
 
 void Screen::addWidget(Widget* widget) {
@@ -16,8 +16,8 @@ uint8_t Screen::totalHeight() {
 
 uint8_t Screen::maxScroll() {
   uint8_t total = totalHeight();
-  if (total <= Display::HEIGHT) return 0;
-  return total - Display::HEIGHT;
+  if (total <= LCDDisplay::HEIGHT) return 0;
+  return total - LCDDisplay::HEIGHT;
 }
 
 Widget* Screen::widgetStartingAt(uint8_t line) {
@@ -96,8 +96,8 @@ void Screen::handleEvent(UIEvent event) {
     if (cursorLine + 1 >= total) return;
     cursorLine++;
     // Move viewport
-    if (cursorLine >= scrollOffset + Display::VIEWPORT_HEIGHT) {
-      scrollOffset = cursorLine - Display::VIEWPORT_HEIGHT + 1;
+    if (cursorLine >= scrollOffset + LCDDisplay::VIEWPORT_HEIGHT) {
+      scrollOffset = cursorLine - LCDDisplay::VIEWPORT_HEIGHT + 1;
     }
   } else if (event == UIEvent::Down) {
     // Move cursor
@@ -118,12 +118,12 @@ void Screen::draw() {
 
   // Exit early if cursor shouldn't be rendered, otherwise render cursor.
   if (cursorDisabled) return;
-  Display::drawChar(0, 0, ' ');
-  Display::drawChar(0, 1, ' ');
+  LCDDisplay::drawChar(0, 0, ' ');
+  LCDDisplay::drawChar(0, 1, ' ');
   int16_t cursorY = (int16_t)cursorLine - (int16_t)scrollOffset;
-  if (cursorY < Display::VIEWPORT_Y_ORIGIN ||
-      cursorY >= Display::VIEWPORT_Y_END) {
+  if (cursorY < LCDDisplay::VIEWPORT_Y_ORIGIN ||
+      cursorY >= LCDDisplay::VIEWPORT_Y_END) {
     return;
   }
-  Display::drawChar(0, cursorY, '>');
+  LCDDisplay::drawChar(0, cursorY, '>');
 }

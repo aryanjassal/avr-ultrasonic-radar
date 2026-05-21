@@ -1,18 +1,18 @@
-#include "drivers/display.hpp"
+#include "drivers/lcd.hpp"
 
 #include <stdint.h>
 
-namespace Display {
+namespace LCDDisplay {
+
+// The active LCD panel being used as the display
+static LCD* lcd = nullptr;
 
 // Was the framebuffer modified?
 bool dirty = false;
 
 // Using double-buffering to render data
-char front[HEIGHT][WIDTH];
-char back[HEIGHT][WIDTH];
-
-// The active LCD panel being used as the display
-static LCD* lcd = nullptr;
+char front[HEIGHT][WIDTH] = {};
+char back[HEIGHT][WIDTH] = {};
 
 // Cursor position within the screen bounds
 static uint8_t cursor_x = 0;
@@ -94,4 +94,4 @@ void render(bool force) {
   dirty = false;
 }
 
-}  // namespace Display
+}  // namespace LCDDisplay

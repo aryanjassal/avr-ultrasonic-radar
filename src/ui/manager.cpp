@@ -1,5 +1,5 @@
 #include "ui/manager.hpp"
-#include "drivers/display.hpp"
+#include "drivers/lcd.hpp"
 #include "drivers/timer.hpp"
 #include "hardware/dial.hpp"
 
@@ -15,7 +15,7 @@ void UIManager::init(Screen* initialScreen) {
   if (current) {
     current->onEnter();
     current->draw();
-    Display::render();
+    LCDDisplay::render();
   }
 }
 
@@ -24,7 +24,7 @@ void UIManager::setScreen(Screen* screen) {
 
   current = screen;
   redrawRequested = true;
-  Display::clearBuffer();
+  LCDDisplay::clearBuffer();
   Dial::reset();
 
   if (current) {
@@ -32,7 +32,7 @@ void UIManager::setScreen(Screen* screen) {
     current->draw();
   }
 
-  Display::render();
+  LCDDisplay::render();
 }
 
 void UIManager::requestRedraw() { redrawRequested = true; }
@@ -52,9 +52,9 @@ void UIManager::update(UIEvent event) {
 
   // Render to the screen
   if (redrawRequested && ((now - lastRender) >= RENDER_INTERVAL_MS)) {
-    Display::clearBuffer();
+    LCDDisplay::clearBuffer();
     current->draw();
-    Display::render();
+    LCDDisplay::render();
 
     redrawRequested = false;
     lastRender = now;

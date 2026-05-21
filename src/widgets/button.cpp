@@ -1,6 +1,6 @@
 #include "widgets/button.hpp"
 
-#include "drivers/display.hpp"
+#include "drivers/lcd.hpp"
 
 ButtonWidget::ButtonWidget(const char* label,
                            void (*callback)(Navigator* navigator))
@@ -12,10 +12,10 @@ void ButtonWidget::handleEvent(UIEvent event, Navigator* navigator) {
 
 void ButtonWidget::draw(uint8_t yOffset, uint8_t viewportTop) {
   int16_t y = (int16_t)yOffset - (int16_t)viewportTop;
-  if (y < Display::VIEWPORT_Y_ORIGIN || y >= Display::VIEWPORT_Y_END) {
+  if (y < LCDDisplay::VIEWPORT_Y_ORIGIN || y >= LCDDisplay::VIEWPORT_Y_END) {
     return;
   }
 
-  Display::drawText(Display::VIEWPORT_X_ORIGIN, y, label);
-  Display::drawChar(Display::VIEWPORT_X_END, y, '>');
+  LCDDisplay::drawText(LCDDisplay::VIEWPORT_X_ORIGIN, y, label);
+  LCDDisplay::drawChar(LCDDisplay::VIEWPORT_X_END, y, '>');
 }
