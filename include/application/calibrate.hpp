@@ -1,6 +1,6 @@
 #pragma once
 
-#include "drivers/radar.hpp"
+#include "radar/controller.hpp"
 #include "state.hpp"
 #include "ui/screen.hpp"
 #include "widgets/button.hpp"

@@ -6,12 +6,13 @@
 #include "drivers/lcd.hpp"
 #include "drivers/matrix.hpp"
 #include "drivers/pin.hpp"
-#include "drivers/radar.hpp"
 #include "drivers/timer.hpp"
 #include "drivers/usart.hpp"
 #include "hardware/dial.hpp"
 #include "hardware/lcd.hpp"
 #include "hardware/matrix.hpp"
+#include "radar/controller.hpp"
+#include "radar/display.hpp"
 #include "ui/manager.hpp"
 
 int main(void) {
@@ -33,25 +34,23 @@ int main(void) {
   // Set up sensors and peripherals
   USART::init(57600);
   RadarController::init(D5);
-  RadarController::setCallback([](uint8_t angle, uint16_t distance) {
-    USART::print(">angle:");
-    USART::print_int32(angle);
-    USART::println();
-    USART::print(">distance:");
-    USART::print_int32(distance);
-    USART::println();
+  RadarController::setCallback([](uint8_t angle, uint16_t distance, uint8_t pointIndex) {
+    RadarDisplay::plot(pointIndex, distance);
+    // USART::print(">angle:");
+    // USART::print_int32(angle);
+    // USART::println();
+    // USART::print(">distance:");
+    // USART::print_int32(distance);
+    // USART::println();
   });
 
   // Setup the matrix display
   Matrix matrix(D11, D12, D13);
   MatrixDisplay::init(&matrix);
-  MatrixDisplay::setOrientation(MatrixDisplay::Orientation::Deg270);
+  MatrixDisplay::setOrientation(MatrixDisplay::Orientation::Deg180);
 
   // Swap to actual program screen
   ui.setScreen(&calibrate);
-
-  int row = 0, col = 0;
-  uint32_t lastUpdatedMs = 0;
 
   while (true) {
     // Handle state change. Each dial state is exclusive, and click takes
@@ -64,24 +63,9 @@ int main(void) {
     else if (delta < 0) event = UIEvent::Up;
     // clang-format on
 
-    if (millis() - lastUpdatedMs > 100) {
-      lastUpdatedMs = millis();
-      MatrixDisplay::clear();
-      col++;
-      if (col > 7) {
-        if (row == 7) {
-          row = 0;
-        } else {
-          row++;
-        }
-        col = 0;
-      }
-      MatrixDisplay::setPixel(row, col, true);
-    }
-
     // Update systems
     ui.update(event);
-    MatrixDisplay::render();
     RadarController::update();
+    RadarDisplay::render();
   }
 }

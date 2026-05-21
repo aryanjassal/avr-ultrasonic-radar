@@ -31,5 +31,11 @@ void writeAngleToServo(uint8_t angle);
 void update();
 
 // Sets the callback for whenever an angle-distance pair is ready.
-void setCallback(void (*callback)(uint8_t angle, uint16_t distance));
+void setCallback(void (*callback)(uint8_t angle, uint16_t distance,
+                                  uint8_t pointIndex));
+
+uint8_t* getStoppingPoints();
+
+uint8_t getStoppingPointCount();
+
 };  // namespace RadarController

@@ -1,4 +1,4 @@
-#include "drivers/radar.hpp"
+#include "radar/controller.hpp"
 
 #include "drivers/pin.hpp"
 #include "hardware/servo.hpp"
@@ -11,7 +11,7 @@ static uint8_t pointCount = 0;
 static int8_t currentPoint = 0;
 static int8_t direction = 1;
 
-void (*callback)(uint8_t angle, uint16_t distance);
+void (*callback)(uint8_t angle, uint16_t distance, uint8_t pointIndex);
 
 enum class ScanState { Moving, WaitingForServo, WaitingForEcho };
 
@@ -21,6 +21,7 @@ void RadarController::generateStoppingPoints() {
   uint8_t min = state.minAngle;
   uint8_t max = state.maxAngle;
 
+  // Ensure proper ordering
   if (max < min) {
     uint8_t t = min;
     min = max;
@@ -28,26 +29,19 @@ void RadarController::generateStoppingPoints() {
   }
 
   uint8_t range = max - min;
-  pointCount = 0;
 
-  // ~30 degree spacing
-  uint8_t step = range / 7;
-  if (step < 30) { step = 30; }
-  if (step == 0) { step = 1; }
+  // Target roughly one point every 30 degrees.
+  // +1 because both endpoints are included.
+  pointCount = (range / 30) + 1;
 
-  for (uint8_t a = min; a < max; a += step) {
-    scanPoints[pointCount++] = a;
-    if (pointCount >= 7) break;
-  }
+  // Clamp point count
+  if (pointCount < 2) pointCount = 2;
+  if (pointCount > 8) pointCount = 8;
 
-  // Always ensure max included
-  scanPoints[pointCount++] = max;
-
-  // Ensure minimum 2 points
-  if (pointCount < 2) {
-    scanPoints[0] = min;
-    scanPoints[1] = max;
-    pointCount = 2;
+  // Evenly distribute points across the range.
+  // Endpoints are always guaranteed.
+  for (uint8_t i = 0; i < pointCount; i++) {
+    scanPoints[i] = min + ((uint32_t)i * range) / (pointCount - 1);
   }
 }
 
@@ -57,7 +51,8 @@ void RadarController::init(const PinDescriptor& ultrasonicTrigger) {
 }
 
 void RadarController::setCallback(void (*_callback)(uint8_t angle,
-                                                    uint16_t distance)) {
+                                                    uint16_t distance,
+                                                    uint8_t pointIndex)) {
   callback = _callback;
 }
 
@@ -87,7 +82,7 @@ void RadarController::update() {
         uint8_t angle = scanPoints[currentPoint];
 
         // Execute the callback with the obtained angle and distance readings.
-        callback(angle, distance);
+        callback(angle, distance, currentPoint);
 
         currentPoint += direction;
 
@@ -115,3 +110,7 @@ void RadarController::writeAngleToServo(uint8_t angle) {
   if (isOperating) return;
   Servo::write_angle(angle);
 }
+
+uint8_t* RadarController::getStoppingPoints() { return scanPoints; }
+
+uint8_t RadarController::getStoppingPointCount() { return pointCount; }
