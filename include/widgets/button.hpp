@@ -1,5 +1,7 @@
 #pragma once
 
+#include "drivers/lcd.hpp"
+#include "string.h"
 #include "ui/widget.hpp"
 
 /**
@@ -16,14 +18,31 @@ class ButtonWidget : public Widget {
 
  public:
   // Initialise the widget with a label and a callback.
-  ButtonWidget(const char* label, void (*callback)(Navigator* navigator));
+  ButtonWidget(const char* label, void (*callback)(Navigator* navigator))
+      : Widget(nullptr, nullptr), label(label), callback(callback) {};
 
   // Return the calculated height. It is updated every time the text is updated.
   uint8_t height() override { return 1; };
 
   // Click events are always passed through even without being selectable.
-  void handleEvent(UIEvent event, Navigator* navigator) override;
+  void handleEvent(UIEvent event, Navigator* navigator) override {
+    if (event == UIEvent::Click && callback != nullptr) { callback(navigator); }
+  };
 
   // Draw the component.
-  void draw(uint8_t yOffset, uint8_t viewportTop) override;
+  void draw(uint8_t yOffset, uint8_t viewportTop) override {
+    // If widget is not in viewport
+    int16_t y = (int16_t)yOffset - (int16_t)viewportTop;
+    if (y < LCDDisplay::VIEWPORT_Y_ORIGIN || y >= LCDDisplay::VIEWPORT_Y_END) {
+      return;
+    }
+
+    uint8_t labelLength = strlen(label) + 1;
+    LCDDisplay::drawText(LCDDisplay::VIEWPORT_X_ORIGIN, y, label);
+    LCDDisplay::drawChar(LCDDisplay::VIEWPORT_X_ORIGIN + labelLength >
+                                 LCDDisplay::VIEWPORT_X_END - 1
+                             ? LCDDisplay::VIEWPORT_X_END - 1
+                             : LCDDisplay::VIEWPORT_X_ORIGIN + labelLength,
+                         y, '>');
+  };
 };

@@ -1,6 +1,7 @@
 #include "radar/controller.hpp"
 
 #include "drivers/pin.hpp"
+#include "drivers/timer.hpp"
 #include "hardware/servo.hpp"
 #include "hardware/ultrasonic.hpp"
 #include "state.hpp"
@@ -10,10 +11,11 @@ static uint8_t scanPoints[8];
 static uint8_t pointCount = 0;
 static int8_t currentPoint = 0;
 static int8_t direction = 1;
+static uint32_t waitUntilTime = 0;
 
 void (*callback)(uint8_t angle, uint16_t distance, uint8_t pointIndex);
 
-enum class ScanState { Moving, WaitingForServo, WaitingForEcho };
+enum class ScanState { Moving, WaitingForServo, WaitingForEcho, Idle };
 
 static ScanState scanState = ScanState::Moving;
 
@@ -31,11 +33,10 @@ void RadarController::generateStoppingPoints() {
   uint8_t range = max - min;
 
   // Target roughly one point every 30 degrees.
-  // +1 because both endpoints are included.
-  pointCount = (range / 30) + 1;
+  // +2 because both endpoints are included.
+  pointCount = (range / 30) + 2;
 
   // Clamp point count
-  if (pointCount < 2) pointCount = 2;
   if (pointCount > 8) pointCount = 8;
 
   // Evenly distribute points across the range.
@@ -96,9 +97,19 @@ void RadarController::update() {
         }
 
         if (currentPoint == 0) { direction = 1; }
-        scanState = ScanState::Moving;
+        uint8_t delay = (99 - state.scanSpeed);
+        if (delay > 0) {
+          waitUntilTime = millis() + delay;
+          scanState = ScanState::Idle;
+        } else {
+          scanState = ScanState::Moving;
+        }
       }
+
       break;
+
+    case ScanState::Idle:
+      if (millis() > waitUntilTime) { scanState = ScanState::Moving; }
   }
 }
 

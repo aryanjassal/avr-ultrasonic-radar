@@ -8,6 +8,9 @@
 
 class UIManager : Navigator {
  private:
+  // All registered screens
+  Screen* screens[6] = {};
+
   // Currently active screen
   Screen* current = nullptr;
 
@@ -18,17 +21,37 @@ class UIManager : Navigator {
   uint32_t lastRender = 0;
 
  public:
-  // Initialise the UI Manager with an initial screen. This can be a welcome or
-  // a booting screen while the system prepares itself. Set to `nullptr` to not
-  // set an initial screen. If provided, the `Screen::onEnter()` event handler
-  // will be executed, immediately followed by `Screen::draw()` and
-  // `LCDDisplay::render()`. This bypasses the render interval.
-  void init(Screen* initialScreen);
+  // Initialise the UI Manager.
+  void init();
 
   // Replace the currently active screen with another screen. The previous
   // screen can execute the `Screen::onExit()` event handler, and the new screen
   // will be rendered immediately. This bypasses the render interval.
-  void setScreen(Screen* screen) override;
+  void navigate(ScreenID screenId) override;
+
+  // Replace the currently active screen with its parent screen. The previous
+  // screen can execute the `Screen::onExit()` event handler, and the new screen
+  // will be rendered immediately. This bypasses the render interval.
+  void back() override;
+
+  // Registers a new screen to the internal registry. This is used to allow
+  // other screens to navigate without creating a new screen or relying on
+  // global definitions.
+  void registerScreen(ScreenID screenId, Screen* screen) override {
+    uint8_t index = (uint8_t)screenId;
+    if (index > sizeof(screens) / sizeof(Screen*)) return;
+    screen->id = screenId;
+    screens[index] = screen;
+  };
+
+  // Deregisters a screen from the internal registry. Useful for making
+  // transient screens like nested menus.
+  void deregisterScreen(ScreenID screenId) override {
+    uint8_t index = (uint8_t)screenId;
+    if (index > sizeof(screens) / sizeof(Screen*)) return;
+    screens[index]->id = ScreenID::None;
+    screens[index] = nullptr;
+  };
 
   // Request a redraw at the next update cycle.
   void requestRedraw();

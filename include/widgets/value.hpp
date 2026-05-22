@@ -44,7 +44,6 @@ class ValueWidget : public Widget {
 
   void draw(uint8_t yOffset, uint8_t viewportTop) override {
     int16_t screenY = (int16_t)yOffset - (int16_t)viewportTop;
-
     if (screenY <= -2 || screenY >= LCDDisplay::VIEWPORT_HEIGHT) { return; }
 
     // LABEL

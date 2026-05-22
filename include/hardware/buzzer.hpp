@@ -5,16 +5,20 @@
 #include "drivers/pin.hpp"
 
 class Buzzer {
+ private:
   OutputPin pin;
-  uint32_t stopTime = 0;
-  uint32_t period = 0;
-  uint32_t highTime = 0;
-  uint32_t lastEdge = 0;
-  bool level = false;
+  bool enabled = false;
 
  public:
-  Buzzer(const PinDescriptor& d);
-  void update();
-  void play(uint16_t freq, uint8_t duty, uint16_t duration_ms);
+  // Use D11 (OC2A) ideally.
+  Buzzer(const PinDescriptor& pin);
+
+  // Start tone generation.
+  void tone(uint16_t frequency);
+
+  // Stop buzzer.
   void stop();
+
+  // Is buzzer currently active?
+  bool active();
 };

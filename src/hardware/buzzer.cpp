@@ -2,43 +2,38 @@
 
 #include <avr/io.h>
 
-#include "drivers/pin.hpp"
-#include "drivers/timer.hpp"
-
-Buzzer::Buzzer(const PinDescriptor& d) : pin(d) {}
-
-void Buzzer::play(uint16_t freq, uint8_t duty, uint16_t duration_ms) {
-  if (stopTime != 0) return;
-  uint32_t p = 1000000ul / freq;
-
-  period = p;
-  highTime = (p * duty) / 100;
-  stopTime = millis() + duration_ms;
-  lastEdge = micros();
-  level = true;
-
-  pin.high();
+Buzzer::Buzzer(const PinDescriptor& descriptor) : pin(descriptor) {
+  TCCR2A = (1 << COM2A0) | (1 << WGM21);  // Timer2 CTC mode
+  TCCR2B = (1 << CS22);                   // Prescaler 64
+  stop();
 }
 
-void Buzzer::update() {
-  if (stopTime == 0) return;
-
-  uint32_t now = micros();
-  uint32_t elapsed = now - lastEdge;
-  uint32_t edgeTime = level ? highTime : (period - highTime);
-
-  if (elapsed >= edgeTime) {
-    level = !level;
-    lastEdge = now;
-
-    if (level)
-      pin.high();
-    else
-      pin.low();
+void Buzzer::tone(uint16_t frequency) {
+  if (frequency == 0) {
+    stop();
+    return;
   }
 
-  if (millis() >= stopTime) {
-    pin.low();
-    stopTime = 0;
-  }
+  // Toggle frequency:
+  // f = F_CPU / (2 * N * (1 + OCR2A))
+  uint32_t compare = (F_CPU / (2ul * 64ul * frequency)) - 1;
+  if (compare > 255) compare = 255;
+  OCR2A = (uint8_t)compare;
+  TCNT2 = 0;
+  TCCR2A = (1 << COM2A0) | (1 << WGM21);
+  TCCR2B = (1 << CS22);
+  enabled = true;
 }
+
+void Buzzer::stop() {
+  // Normal port operation on OC2A
+  TCCR2A &= ~((1 << COM2A1) | (1 << COM2A0));
+
+  // Stop Timer2 clock
+  TCCR2B &= ~((1 << CS22) | (1 << CS21) | (1 << CS20));
+
+  pin.low();
+  enabled = false;
+}
+
+bool Buzzer::active() { return enabled; }

@@ -1,4 +1,5 @@
 #include "ui/manager.hpp"
+
 #include "drivers/lcd.hpp"
 #include "drivers/timer.hpp"
 #include "hardware/dial.hpp"
@@ -7,33 +8,30 @@
 // load.
 static constexpr uint32_t RENDER_INTERVAL_MS = 100;
 
-void UIManager::init(Screen* initialScreen) {
-  Dial::reset();
-  current = initialScreen;
-  redrawRequested = true;
+void UIManager::init() { Dial::reset(); }
 
-  if (current) {
-    current->onEnter();
-    current->draw();
-    LCDDisplay::render();
-  }
-}
+void UIManager::navigate(ScreenID screenId) {
+  uint8_t index = (uint8_t)screenId;
+  if (index > sizeof(screens) / sizeof(Screen*)) return;
+  if (!screens[index]) return;
 
-void UIManager::setScreen(Screen* screen) {
-  if (current) { current->onExit(); }
+  if (current) { current->exit(); }
 
-  current = screen;
+  current = screens[index];
   redrawRequested = true;
   LCDDisplay::clearBuffer();
   Dial::reset();
 
   if (current) {
-    current->onEnter();
+    current->setNavigator(this);
+    current->enter();
     current->draw();
   }
 
   LCDDisplay::render();
 }
+
+void UIManager::back() { navigate(current->parent); }
 
 void UIManager::requestRedraw() { redrawRequested = true; }
 

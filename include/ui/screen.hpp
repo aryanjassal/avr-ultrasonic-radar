@@ -2,6 +2,7 @@
 
 #include <stdint.h>
 
+#include "application/screens.hpp"
 #include "ui/event.hpp"
 #include "ui/widget.hpp"
 
@@ -12,7 +13,7 @@ class Screen {
  public:
   static constexpr uint8_t MAX_WIDGETS = 16;
 
-  Screen(Screen* parent) : parent(parent) {}
+  Screen(ScreenID self, ScreenID parent) : id(self), parent(parent) {}
 
   virtual ~Screen() = default;
 
@@ -21,6 +22,19 @@ class Screen {
 
   // Executed when the UI manager is leaving this screen.
   virtual void onExit() {}
+
+  // Invoke the enter callback. Executes generic enter handling along with the
+  // callback.
+  void enter() {
+    cursorLine = 0;
+    scrollOffset = 0;
+    activeWidget = nullptr;
+    onEnter();
+  }
+
+  // Invoke the exit callback. Executes generic exit handling along with the
+  // callback.
+  void exit() { onExit(); };
 
   // The UI manager passes events to each screen to handle. By default, the
   // events `UIEvent::Up` and `UIEvent::Down` are used for scrolling per line.
@@ -55,16 +69,18 @@ class Screen {
   // overwriting previous widgets.
   void draw();
 
+  // The id of this screen.
+  ScreenID id = ScreenID::None;
+
+  // The parent of this screen.
+  ScreenID parent = ScreenID::None;
+
  protected:
   // Append a widget to the list of widgets. Does nothing if the limit has been
   // hit. Widgets must be inserted in order, and cannot be removed once
   // inserted.
   void addWidget(Widget* widget);
 
-  // The parent of this screen.
-  Screen* parent = nullptr;
-
- private:
   // Calculate and return the maximum height of all the widgets within the
   // screen.
   uint8_t totalHeight();
