@@ -11,35 +11,47 @@ struct PopupAction {
   void (*callback)(void);
 };
 
+template <uint8_t COUNT>
 class PopupScreen : public Screen {
  private:
   TextWidget title;
-  TextWidget body;
   ButtonWidget backButton;
+  bool configured = false;
 
  public:
-  PopupScreen(ScreenID parent, const char* titleText, const char* bodyText)
+  PopupScreen(ScreenID parent, const char* titleText, Widget* /*children*/[COUNT])
       : Screen(ScreenID::Popup, parent),
         title(titleText),
-        body(bodyText),
-        backButton("BACK", [](Navigator* navigator) { navigator->back(); }) {
+        backButton("BACK", [](Navigator* navigator) { navigator->back(); }) {}
+
+  void configure(Widget* children[COUNT]) {
+    if (configured) return;
+
     addWidget(&title);
-    addWidget(&body);
+
+    for (uint8_t i = 0; i < COUNT; i++) {
+      if (children[i]) { addWidget(children[i]); }
+    }
+
     addWidget(&backButton);
+    configured = true;
   }
 };
 
+template <uint8_t COUNT>
 class PopupWidget : public Widget {
  private:
   ButtonWidget launcher;
-  PopupScreen popup;
+  PopupScreen<COUNT> popup;
+  Widget** widgets;
 
  public:
   PopupWidget(ScreenID parent, const char* label, const char* popupTitle,
-              const char* popupBody)
+              Widget* widgets[COUNT])
       : Widget(nullptr, nullptr),
         launcher(label, nullptr),
-        popup(parent, popupTitle, popupBody) {}
+        popup(parent, popupTitle, widgets),
+        widgets(widgets) {}
 
   uint8_t height() override { return launcher.height(); }
 
@@ -47,7 +59,9 @@ class PopupWidget : public Widget {
 
   void handleEvent(UIEvent event, Navigator* navigator) override {
     if (event != UIEvent::Click) return;
-    navigator->registerScreen(ScreenID::Popup, &popup);
+    popup.id = ScreenID::Popup;
+    popup.configure(widgets);
+    navigator->registerScreen(&popup);
     navigator->navigate(ScreenID::Popup);
   }
 };

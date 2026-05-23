@@ -82,6 +82,11 @@ class TextWidget : public Widget {
   }
 
  public:
+  TextWidget()
+      : Widget(nullptr, nullptr),
+        text(""),
+        textHeight(1) {};
+
   // Initialise the widget with some text. This can be changed later.
   TextWidget(const char* text)
       : Widget(nullptr, nullptr),

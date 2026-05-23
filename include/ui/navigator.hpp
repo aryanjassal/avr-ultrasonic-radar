@@ -9,6 +9,6 @@ class Navigator {
  public:
   virtual void navigate(ScreenID id) = 0;
   virtual void back() = 0;
-  virtual void registerScreen(ScreenID id, Screen* screen) = 0;
+  virtual void registerScreen(Screen* screen) = 0;
   virtual void deregisterScreen(ScreenID id) = 0;
 };

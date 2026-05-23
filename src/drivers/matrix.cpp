@@ -163,13 +163,4 @@ void render(bool force) {
   dirty = false;
 }
 
-// Getter for dirty
-bool isDirty() { return dirty; }
-
-// Getter for the buffers. While it allows modification due to the passing of
-// pointers, nothing can be done about that.
-const uint8_t* getFrontBuffer() { return front; }
-
-const uint8_t* getBackBuffer() { return back; }
-
 }  // namespace MatrixDisplay

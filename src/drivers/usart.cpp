@@ -6,8 +6,32 @@
 
 static void (*usartRxHandler)() = nullptr;
 
+// Use a ring buffer with 32 bytes of storage to queue up data to send. Allows
+// for cheap and efficient queueing.
+static constexpr uint8_t TX_BUFFER_SIZE = 32;
+static volatile char txBuffer[TX_BUFFER_SIZE];
+static volatile uint8_t txHead = 0;
+static volatile uint8_t txTail = 0;
+
 ISR(USART_RX_vect) {
-  if (usartRxHandler != nullptr) { usartRxHandler(); }
+  if (usartRxHandler != nullptr) {
+    usartRxHandler();
+  } else {
+    (void)UDR0;
+  }
+}
+
+ISR(USART_UDRE_vect) {
+  // Buffer empty?
+  if (txHead == txTail) {
+    // Disable interrupt
+    UCSR0B &= ~(1 << UDRIE0);
+    return;
+  }
+
+  // Transmit next byte
+  UDR0 = txBuffer[txTail];
+  txTail = (txTail + 1) % TX_BUFFER_SIZE;
 }
 
 void USART::init(uint32_t baud, bool doubleSpeed) {
@@ -22,8 +46,16 @@ void USART::flush() {
 }
 
 void USART::print(char c) {
-  while (!(UCSR0A & (1 << UDRE0)));
-  UDR0 = c;
+  uint8_t next = (txHead + 1) % TX_BUFFER_SIZE;
+
+  // Wait if full
+  while (next == txTail);
+
+  txBuffer[txHead] = c;
+  txHead = next;
+
+  // Enable TX interrupt
+  UCSR0B |= (1 << UDRIE0);
 }
 
 void USART::print(const char* str) {
@@ -55,4 +87,7 @@ void USART::print_float(float num, uint8_t width, uint8_t precision) {
   USART::print(buf);
 }
 
-void USART::installRx(void (*handler)()) { usartRxHandler = handler; }
+void USART::installRx(void (*handler)()) {
+  usartRxHandler = handler;
+  UCSR0B |= (1 << RXCIE0);
+}

@@ -12,7 +12,7 @@ void UIManager::init() { Dial::reset(); }
 
 void UIManager::navigate(ScreenID screenId) {
   uint8_t index = (uint8_t)screenId;
-  if (index > sizeof(screens) / sizeof(Screen*)) return;
+  if (index >= sizeof(screens) / sizeof(Screen*)) return;
   if (!screens[index]) return;
 
   if (current) { current->exit(); }
@@ -31,7 +31,10 @@ void UIManager::navigate(ScreenID screenId) {
   LCDDisplay::render();
 }
 
-void UIManager::back() { navigate(current->parent); }
+void UIManager::back() {
+  if (!current) return;
+  navigate(current->parent);
+}
 
 void UIManager::requestRedraw() { redrawRequested = true; }
 

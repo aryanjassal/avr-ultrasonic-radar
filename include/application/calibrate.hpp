@@ -1,5 +1,6 @@
 #pragma once
 
+#include "drivers/usart.hpp"
 #include "radar/controller.hpp"
 #include "radar/display.hpp"
 #include "state.hpp"
@@ -9,27 +10,23 @@
 #include "widgets/text.hpp"
 #include "widgets/value.hpp"
 
-static void onMinAngleSelect(Navigator* navigator) {
-  state.servoPreview = ServoPreviewMode::MinAngle;
-}
-
-static void onMinAngleDeselect(Navigator* navigator) {
-  state.servoPreview = ServoPreviewMode::None;
-}
-
-static void onMaxAngleSelect(Navigator* navigator) {
-  state.servoPreview = ServoPreviewMode::MaxAngle;
-}
-
-static void onMaxAngleDeselect(Navigator* navigator) {
-  state.servoPreview = ServoPreviewMode::None;
-}
-
-static void onNext(Navigator* navigator) {
-  state.ready = true;
-  RadarController::generateStoppingPoints();
-  RadarController::start();
-  navigator->navigate(ScreenID::Menu);
+static inline void printCalibrationMetrics() {
+  // Min distance
+  USART::print("$mind:");
+  USART::print_int32(state.minDistance);
+  USART::println();
+  // Max distance
+  USART::print("$maxd:");
+  USART::print_int32(state.maxDistance);
+  USART::println();
+  // Min angle
+  USART::print("$mina:");
+  USART::print_int32(state.minAngle);
+  USART::println();
+  // Max angle
+  USART::print("$maxa:");
+  USART::print_int32(state.maxAngle);
+  USART::println();
 }
 
 class CalibrationScreen : public Screen {
@@ -41,8 +38,37 @@ class CalibrationScreen : public Screen {
   ValueWidget<uint16_t> minDistanceInput;
   ValueWidget<uint16_t> maxDistanceInput;
   ValueWidget<uint8_t> speedInput;
-  PopupWidget helpPopup;
+  ValueWidget<uint16_t> alarmThresholdInput;
+  PopupWidget<1> helpPopup;
+  TextWidget helpBody;
   ButtonWidget nextButton;
+
+  Widget* helpPopupBody[1] = {&helpBody};
+
+  // Callbacks
+  static void onMinAngleSelect(Navigator* navigator) {
+    state.servoPreview = ServoPreviewMode::MinAngle;
+  }
+
+  static void onMinAngleDeselect(Navigator* navigator) {
+    state.servoPreview = ServoPreviewMode::None;
+  }
+
+  static void onMaxAngleSelect(Navigator* navigator) {
+    state.servoPreview = ServoPreviewMode::MaxAngle;
+  }
+
+  static void onMaxAngleDeselect(Navigator* navigator) {
+    state.servoPreview = ServoPreviewMode::None;
+  }
+
+  static void onNext(Navigator* navigator) {
+    state.ready = true;
+    RadarController::generateStoppingPoints();
+    RadarController::start();
+    if (state.usartRendering) printCalibrationMetrics();
+    navigator->navigate(ScreenID::Menu);
+  }
 
  public:
   CalibrationScreen()
@@ -55,10 +81,11 @@ class CalibrationScreen : public Screen {
         minDistanceInput("MIN_DIST", &state.minDistance, 0, 9999),
         maxDistanceInput("MAX_DIST", &state.maxDistance, 0, 10000),
         speedInput("SPEED", &state.scanSpeed, 1, 99),
-        helpPopup(id, "HELP", "HELP",
-                  "Before using the system, please calibrate it. Click to edit "
-                  "a value. Click again to save. All angles are in degrees and "
-                  "distances in mm."),
+        alarmThresholdInput("ALARM_THRESHOLD", &state.alarmThreshold, 100, 300),
+        helpPopup(id, "HELP", "HELP", helpPopupBody),
+        helpBody(
+            "Click to edit a value. Click again to save. All angles are in "
+            "degrees and distances in mm."),
         nextButton("NEXT", onNext) {
     addWidget(&title);
     addWidget(&minAngleInput);
@@ -66,6 +93,7 @@ class CalibrationScreen : public Screen {
     addWidget(&minDistanceInput);
     addWidget(&maxDistanceInput);
     addWidget(&speedInput);
+    addWidget(&alarmThresholdInput);
     addWidget(&helpPopup);
     addWidget(&nextButton);
   }

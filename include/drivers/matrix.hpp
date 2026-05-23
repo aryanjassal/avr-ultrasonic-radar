@@ -6,7 +6,7 @@
 
 namespace MatrixDisplay {
 
-// Display resolutoin to build a framebuffer
+// Display resolution to build a framebuffer
 constexpr uint8_t WIDTH = 8;
 constexpr uint8_t HEIGHT = 8;
 
@@ -45,13 +45,6 @@ void drawRow(uint8_t y, uint8_t value);
 // Controls the state of the entire screen at once.
 void fill(bool enabled);
 
-// Rendering is only done if the screen is dirty. In other words, if the target
-// state of the screen changed from the previous state. If the display is not
-// dirty, then regular rendering will be a no-op command. However, the render
-// method can be forced to render without respecting the dirty flag. However,
-// this should not be used trivially, as this can impact performance heavily.
-bool isDirty();
-
 // The front buffer is currently being displayed, and the back buffer is
 // currently being rendered to. When rendering, each position in the framebuffer
 // is diffed to find the updated section, and the changed section is updated
@@ -68,12 +61,5 @@ void render(bool force = false);
 // This method mutates the matrix state, in contrast to other methods only
 // modifying the back buffer for the next render.
 void clear();
-
-// The framebuffers should never be modified directly, as that would break the
-// dirty tracking. However, there could be cases when the program needs to read
-// the state of the framebuffers directly. For such cases, the framebuffer can
-// be accessed in a read-only way.
-const uint8_t* getFrontBuffer();
-const uint8_t* getBackBuffer();
 
 }  // namespace MatrixDisplay

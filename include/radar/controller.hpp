@@ -34,8 +34,10 @@ void update();
 void setCallback(void (*callback)(uint8_t angle, uint16_t distance,
                                   uint8_t pointIndex));
 
+// Get the stopping points for the radar sweep.
 uint8_t* getStoppingPoints();
 
+// Get the number of stopping points for the radar sweep.
 uint8_t getStoppingPointCount();
 
 };  // namespace RadarController

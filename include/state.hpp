@@ -22,9 +22,16 @@ struct AppState {
 
   // If the system is currently alarming
   bool alarmEnabled = false;
+  uint16_t alarmThreshold = 210;
 
   // Mode
-  RadarMode mode;
+  RadarMode mode = RadarMode::Tracking;
+
+  // USART debugging
+  bool sendAmplitude = false;
+  bool sendAngle = false;
+  bool sendDistance = false;
+  bool usartRendering = false;
 };
 
 extern AppState state;

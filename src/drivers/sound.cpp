@@ -2,12 +2,10 @@
 
 #include "drivers/pin.hpp"
 #include "drivers/timer.hpp"
+#include "state.hpp"
 
 static constexpr uint16_t SAMPLE_INTERVAL_US = 1000;
 static constexpr uint16_t WINDOW_MS = 50;
-
-// Tune experimentally.
-static constexpr uint16_t SPIKE_THRESHOLD = 150;
 
 Sound::Sound(const PinDescriptor& input) : input(input) {
   windowStartMillis = millis();
@@ -29,7 +27,7 @@ void Sound::update() {
   // Finish window
   if (nowMillis - windowStartMillis >= WINDOW_MS) {
     peakToPeak = signalMax - signalMin;
-    if (peakToPeak >= SPIKE_THRESHOLD) { spikeDetected = true; }
+    if (peakToPeak >= state.alarmThreshold) { spikeDetected = true; }
 
     signalMin = 1023;
     signalMax = 0;

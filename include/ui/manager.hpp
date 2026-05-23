@@ -37,10 +37,10 @@ class UIManager : Navigator {
   // Registers a new screen to the internal registry. This is used to allow
   // other screens to navigate without creating a new screen or relying on
   // global definitions.
-  void registerScreen(ScreenID screenId, Screen* screen) override {
-    uint8_t index = (uint8_t)screenId;
-    if (index > sizeof(screens) / sizeof(Screen*)) return;
-    screen->id = screenId;
+  void registerScreen(Screen* screen) override {
+    if (!screen) return;
+    uint8_t index = (uint8_t)screen->id;
+    if (index >= sizeof(screens) / sizeof(Screen*)) return;
     screens[index] = screen;
   };
 
@@ -48,8 +48,8 @@ class UIManager : Navigator {
   // transient screens like nested menus.
   void deregisterScreen(ScreenID screenId) override {
     uint8_t index = (uint8_t)screenId;
-    if (index > sizeof(screens) / sizeof(Screen*)) return;
-    screens[index]->id = ScreenID::None;
+    if (index >= sizeof(screens) / sizeof(Screen*)) return;
+    if (!screens[index]) return;
     screens[index] = nullptr;
   };
 
@@ -69,4 +69,7 @@ class UIManager : Navigator {
   // `UIEvent::None` must be used to indicate no events, which will skip
   // re-rendering the screen if a redraw wasn't explicitly requested.
   void update(UIEvent event);
+
+  // Returns the current screen being rendered.
+  Screen* getCurrentScreen() { return current; };
 };

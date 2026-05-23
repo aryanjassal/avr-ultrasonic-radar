@@ -11,7 +11,7 @@ class Navigator;
 
 class Screen {
  public:
-  static constexpr uint8_t MAX_WIDGETS = 16;
+  static constexpr uint8_t MAX_WIDGETS = 10;
 
   Screen(ScreenID self, ScreenID parent) : id(self), parent(parent) {}
 

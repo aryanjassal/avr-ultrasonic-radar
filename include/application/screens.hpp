@@ -7,5 +7,6 @@ enum class ScreenID : uint8_t {
   Loading,
   Calibration,
   Menu,
+  Alarm,
   Popup,
 };

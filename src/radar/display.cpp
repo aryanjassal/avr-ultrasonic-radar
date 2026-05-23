@@ -35,6 +35,9 @@ void RadarDisplay::plot(uint8_t pointIndex, uint16_t distance) {
 void RadarDisplay::render() {
   MatrixDisplay::clearBuffer();
 
+  // Disable matrix rendering if USART rendering is enabled.
+  if (state.usartRendering) return;
+
   // Occupancy columns
   for (uint8_t x = 0; x < 8; x++) {
     int8_t hitY = columns[x];

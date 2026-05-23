@@ -16,7 +16,7 @@ template <typename T, uint8_t COUNT>
 class MultiselectScreen : public Screen {
  private:
   TextWidget title;
-  TextWidget* entries[COUNT];
+  TextWidget entries[COUNT];
   MultiselectOption<T>* options;
   T* boundValue;
 
@@ -30,8 +30,8 @@ class MultiselectScreen : public Screen {
     addWidget(&title);
 
     for (uint8_t i = 0; i < COUNT; i++) {
-      entries[i] = new TextWidget(options[i].label);
-      addWidget(entries[i]);
+      entries[i].setText(options[i].label);
+      addWidget(&entries[i]);
     }
   }
 
@@ -44,7 +44,7 @@ class MultiselectScreen : public Screen {
     Widget* widget = getNearestWidget(cursorLine);
 
     for (uint8_t i = 0; i < COUNT; i++) {
-      if (widget == entries[i]) {
+      if (widget == &entries[i]) {
         *boundValue = options[i].value;
         navigator->navigate(parent);
         navigator->deregisterScreen(ScreenID::Popup);
@@ -76,7 +76,7 @@ class MultiselectWidget : public Widget {
 
   void handleEvent(UIEvent event, Navigator* navigator) override {
     if (event != UIEvent::Click) return;
-    navigator->registerScreen(ScreenID::Popup, &popup);
+    navigator->registerScreen(&popup);
     navigator->navigate(ScreenID::Popup);
   }
 
@@ -99,6 +99,7 @@ class MultiselectWidget : public Widget {
           break;
         }
       }
+      if (bound == nullptr) return;
       LCDDisplay::drawText(LCDDisplay::VIEWPORT_X_ORIGIN + 1, screenY + 1,
                            bound);
     }

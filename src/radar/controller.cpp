@@ -2,18 +2,20 @@
 
 #include "drivers/pin.hpp"
 #include "drivers/timer.hpp"
+#include "drivers/usart.hpp"
 #include "hardware/servo.hpp"
 #include "hardware/ultrasonic.hpp"
 #include "state.hpp"
 
 static bool isOperating = false;
-static uint8_t scanPoints[8];
+static uint8_t scanPoints[64];
 static uint8_t pointCount = 0;
 static int8_t currentPoint = 0;
 static int8_t direction = 1;
 static uint32_t waitUntilTime = 0;
 
-void (*callback)(uint8_t angle, uint16_t distance, uint8_t pointIndex);
+void (*callback)(uint8_t angle, uint16_t distance,
+                 uint8_t pointIndex) = nullptr;
 
 enum class ScanState { Moving, WaitingForServo, WaitingForEcho, Idle };
 
@@ -32,12 +34,21 @@ void RadarController::generateStoppingPoints() {
 
   uint8_t range = max - min;
 
-  // Target roughly one point every 30 degrees.
-  // +2 because both endpoints are included.
-  pointCount = (range / 30) + 2;
+  if (!state.usartRendering) {
+    // Target roughly one point every 30 degrees.
+    // +2 because both endpoints are included.
+    pointCount = (range / 30) + 2;
 
-  // Clamp point count
-  if (pointCount > 8) pointCount = 8;
+    // Clamp point count
+    if (pointCount > 8) pointCount = 8;
+  } else {
+    // Target roughly one point every 3 degrees.
+    // +2 because both endpoints are included.
+    pointCount = (range / 3) + 2;
+
+    // Clamp point count
+    if (pointCount > 64) pointCount = 64;
+  }
 
   // Evenly distribute points across the range.
   // Endpoints are always guaranteed.
@@ -61,6 +72,18 @@ void RadarController::update() {
   Servo::update();
   Ultrasonic::update();
 
+  // Send data to USART if enabled
+  if (state.sendAngle) {
+    USART::print(">angle:");
+    USART::print_uint32(Servo::angle());
+    USART::println();
+  }
+  if (state.sendDistance) {
+    USART::print(">distance:");
+    USART::print_uint32(Ultrasonic::distance_mm());
+    USART::println();
+  }
+
   // Exit early if the system is not in operation
   if (!isOperating) return;
 
@@ -83,7 +106,7 @@ void RadarController::update() {
         uint8_t angle = scanPoints[currentPoint];
 
         // Execute the callback with the obtained angle and distance readings.
-        callback(angle, distance, currentPoint);
+        if (callback != nullptr) { callback(angle, distance, currentPoint); }
 
         currentPoint += direction;
 
