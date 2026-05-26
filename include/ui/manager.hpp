@@ -9,7 +9,7 @@
 class UIManager : Navigator {
  private:
   // All registered screens
-  Screen* screens[6] = {};
+  Screen* screens[8] = {};
 
   // Currently active screen
   Screen* current = nullptr;

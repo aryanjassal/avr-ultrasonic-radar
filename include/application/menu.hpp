@@ -28,8 +28,7 @@ class MenuScreen : public Screen {
   MultiselectWidget<RadarMode, 2> radarMode;
 
   // USART debugging menu
-  PopupWidget<3> usartDebuggingMenu;
-  TextWidget usartPopupBody;
+  PopupWidget usartDebuggingMenu;
   BooleanWidget sendAmplitudeInput;
   BooleanWidget sendAngleInput;
   BooleanWidget sendDistanceInput;
@@ -50,6 +49,10 @@ class MenuScreen : public Screen {
 
   static void onClearRadar(Navigator* navigator) { RadarDisplay::clear(); }
 
+  static void onModeChange(Navigator* navigator) {
+    state.manualTrackingMode = state.mode == RadarMode::Tracking;
+  }
+
  public:
   MenuScreen()
       : Screen(ScreenID::Menu, ScreenID::None),
@@ -59,9 +62,9 @@ class MenuScreen : public Screen {
         recalibrateButton("RECALIBRATE", onRecalibrate),
         clearRadarButton("CLEAR_RADAR", onClearRadar),
         radarMode(ScreenID::Menu, "MODE", modeOptions, &state.mode,
-                  "SELECT MODE"),
+                  "SELECT MODE", onModeChange),
         usartDebuggingMenu(id, "USART_DEBUG", "USART DEBUG",
-                           usartDebuggingWidgets),
+                           usartDebuggingWidgets, 3),
         sendAmplitudeInput("SEND_AMPLITUDE", &state.sendAmplitude),
         sendAngleInput("SEND_ANGLE", &state.sendAngle),
         sendDistanceInput("SEND_DISTANCE", &state.sendDistance) {
@@ -74,7 +77,7 @@ class MenuScreen : public Screen {
     addWidget(&usartDebuggingMenu);
   }
 
-  void onEnter() override { state.mode = RadarMode::Alert; }
-
-  void onExit() override { state.mode = RadarMode::Tracking; }
+  void onEnter() override {
+    if (!state.manualTrackingMode) { state.mode = RadarMode::Alert; }
+  }
 };

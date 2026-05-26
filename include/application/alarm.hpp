@@ -37,6 +37,8 @@ class AlarmScreen : public Screen {
     addWidget(&backButton);
   }
 
+  void onEnter() override { state.mode = RadarMode::Tracking; }
+
   void onExit() override {
     state.alarmEnabled = false;
     RadarController::start();

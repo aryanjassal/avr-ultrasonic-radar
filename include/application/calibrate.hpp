@@ -39,7 +39,7 @@ class CalibrationScreen : public Screen {
   ValueWidget<uint16_t> maxDistanceInput;
   ValueWidget<uint8_t> speedInput;
   ValueWidget<uint16_t> alarmThresholdInput;
-  PopupWidget<1> helpPopup;
+  PopupWidget helpPopup;
   TextWidget helpBody;
   ButtonWidget nextButton;
 
@@ -82,7 +82,7 @@ class CalibrationScreen : public Screen {
         maxDistanceInput("MAX_DIST", &state.maxDistance, 0, 10000),
         speedInput("SPEED", &state.scanSpeed, 1, 99),
         alarmThresholdInput("ALARM_THRESHOLD", &state.alarmThreshold, 100, 300),
-        helpPopup(id, "HELP", "HELP", helpPopupBody),
+        helpPopup(id, "HELP", "HELP", helpPopupBody, 1),
         helpBody(
             "Click to edit a value. Click again to save. All angles are in "
             "degrees and distances in mm."),
@@ -98,7 +98,10 @@ class CalibrationScreen : public Screen {
     addWidget(&nextButton);
   }
 
-  void onEnter() override { RadarDisplay::clear(); }
+  void onEnter() override {
+    state.mode = RadarMode::Tracking;
+    RadarDisplay::clear();
+  }
 
   void update(uint32_t now) override {
     // Make sure invalid distances are not possible

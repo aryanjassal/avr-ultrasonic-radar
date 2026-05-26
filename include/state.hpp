@@ -26,6 +26,7 @@ struct AppState {
 
   // Mode
   RadarMode mode = RadarMode::Tracking;
+  bool manualTrackingMode = false;
 
   // USART debugging
   bool sendAmplitude = false;

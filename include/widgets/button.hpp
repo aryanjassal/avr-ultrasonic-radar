@@ -17,6 +17,22 @@ class ButtonWidget : public Widget {
   void (*callback)(Navigator* navigator);
 
  public:
+  static void drawButtonLabel(const char* label, uint8_t yOffset,
+                              uint8_t viewportTop) {
+    int16_t y = (int16_t)yOffset - (int16_t)viewportTop;
+    if (y < LCDDisplay::VIEWPORT_Y_ORIGIN || y >= LCDDisplay::VIEWPORT_Y_END) {
+      return;
+    }
+
+    uint8_t labelLength = strlen(label);
+    LCDDisplay::drawText(LCDDisplay::VIEWPORT_X_ORIGIN, y, label);
+    LCDDisplay::drawChar(LCDDisplay::VIEWPORT_X_ORIGIN + labelLength + 1 >
+                                 LCDDisplay::VIEWPORT_X_END - 1
+                             ? LCDDisplay::VIEWPORT_X_END - 1
+                             : LCDDisplay::VIEWPORT_X_ORIGIN + labelLength + 1,
+                         y, '>');
+  }
+
   // Initialise the widget with a label and a callback.
   ButtonWidget(const char* label, void (*callback)(Navigator* navigator))
       : Widget(nullptr, nullptr), label(label), callback(callback) {};
@@ -31,18 +47,6 @@ class ButtonWidget : public Widget {
 
   // Draw the component.
   void draw(uint8_t yOffset, uint8_t viewportTop) override {
-    // If widget is not in viewport
-    int16_t y = (int16_t)yOffset - (int16_t)viewportTop;
-    if (y < LCDDisplay::VIEWPORT_Y_ORIGIN || y >= LCDDisplay::VIEWPORT_Y_END) {
-      return;
-    }
-
-    uint8_t labelLength = strlen(label) + 1;
-    LCDDisplay::drawText(LCDDisplay::VIEWPORT_X_ORIGIN, y, label);
-    LCDDisplay::drawChar(LCDDisplay::VIEWPORT_X_ORIGIN + labelLength >
-                                 LCDDisplay::VIEWPORT_X_END - 1
-                             ? LCDDisplay::VIEWPORT_X_END - 1
-                             : LCDDisplay::VIEWPORT_X_ORIGIN + labelLength,
-                         y, '>');
+    drawButtonLabel(label, yOffset, viewportTop);
   };
 };

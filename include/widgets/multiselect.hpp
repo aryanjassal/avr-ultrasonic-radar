@@ -19,14 +19,17 @@ class MultiselectScreen : public Screen {
   TextWidget entries[COUNT];
   MultiselectOption<T>* options;
   T* boundValue;
+  void (*onChangeCallback)(Navigator* navigator);
 
  public:
   MultiselectScreen(ScreenID parent, const char* screenTitle,
-                    MultiselectOption<T>* options, T* boundValue)
+                    MultiselectOption<T>* options, T* boundValue,
+                    void (*onChangeCallback)(Navigator* navigator))
       : Screen(ScreenID::Popup, parent),
         title(screenTitle),
         options(options),
-        boundValue(boundValue) {
+        boundValue(boundValue),
+        onChangeCallback(onChangeCallback) {
     addWidget(&title);
 
     for (uint8_t i = 0; i < COUNT; i++) {
@@ -46,6 +49,7 @@ class MultiselectScreen : public Screen {
     for (uint8_t i = 0; i < COUNT; i++) {
       if (widget == &entries[i]) {
         *boundValue = options[i].value;
+        if (onChangeCallback != nullptr) { onChangeCallback(navigator); }
         navigator->navigate(parent);
         navigator->deregisterScreen(ScreenID::Popup);
         return;
@@ -65,12 +69,13 @@ class MultiselectWidget : public Widget {
  public:
   MultiselectWidget(ScreenID parent, const char* label,
                     MultiselectOption<T>* options, T* boundValue,
-                    const char* popupTitle)
+                    const char* popupTitle,
+                    void (*onChangeCallback)(Navigator* navigator) = nullptr)
       : Widget(nullptr, nullptr),
         label(label),
         options(options),
         boundValue(boundValue),
-        popup(parent, popupTitle, options, boundValue) {}
+        popup(parent, popupTitle, options, boundValue, onChangeCallback) {}
 
   uint8_t height() override { return 2; }
 

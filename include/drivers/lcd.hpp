@@ -19,9 +19,6 @@ constexpr uint8_t VIEWPORT_Y_ORIGIN = 0;
 constexpr uint8_t VIEWPORT_X_END = VIEWPORT_X_ORIGIN + VIEWPORT_WIDTH;
 constexpr uint8_t VIEWPORT_Y_END = VIEWPORT_Y_ORIGIN + VIEWPORT_HEIGHT;
 
-// Was the framebuffer modified?
-extern bool dirty;
-
 // Initialise the display with the given LCD. Note that the LCD should be
 // initialised already.
 void init(LCD* display);

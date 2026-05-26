@@ -11,56 +11,60 @@ struct PopupAction {
   void (*callback)(void);
 };
 
-template <uint8_t COUNT>
 class PopupScreen : public Screen {
  private:
   TextWidget title;
   ButtonWidget backButton;
-  bool configured = false;
 
  public:
-  PopupScreen(ScreenID parent, const char* titleText, Widget* /*children*/[COUNT])
-      : Screen(ScreenID::Popup, parent),
-        title(titleText),
+  PopupScreen()
+      : Screen(ScreenID::Popup, ScreenID::None),
+        title(""),
         backButton("BACK", [](Navigator* navigator) { navigator->back(); }) {}
 
-  void configure(Widget* children[COUNT]) {
-    if (configured) return;
+  void configure(ScreenID parent, const char* titleText, Widget** children,
+                 uint8_t childCount) {
+    this->parent = parent;
+    title.setText(titleText);
+    widgetCount = 0;
 
     addWidget(&title);
-
-    for (uint8_t i = 0; i < COUNT; i++) {
+    for (uint8_t i = 0; i < childCount; i++) {
       if (children[i]) { addWidget(children[i]); }
     }
-
     addWidget(&backButton);
-    configured = true;
   }
 };
 
-template <uint8_t COUNT>
+extern PopupScreen popup;
+
 class PopupWidget : public Widget {
  private:
-  ButtonWidget launcher;
-  PopupScreen<COUNT> popup;
+  ScreenID parent;
+  const char* label;
+  const char* title;
   Widget** widgets;
+  uint8_t widgetCount;
 
  public:
   PopupWidget(ScreenID parent, const char* label, const char* popupTitle,
-              Widget* widgets[COUNT])
+              Widget** widgets, uint8_t widgetCount)
       : Widget(nullptr, nullptr),
-        launcher(label, nullptr),
-        popup(parent, popupTitle, widgets),
-        widgets(widgets) {}
+        parent(parent),
+        label(label),
+        title(popupTitle),
+        widgets(widgets),
+        widgetCount(widgetCount) {}
 
-  uint8_t height() override { return launcher.height(); }
+  uint8_t height() override { return 1; }
 
-  void draw(uint8_t y, uint8_t top) override { launcher.draw(y, top); }
+  void draw(uint8_t yOffset, uint8_t viewportTop) override {
+    ButtonWidget::drawButtonLabel(label, yOffset, viewportTop);
+  }
 
   void handleEvent(UIEvent event, Navigator* navigator) override {
     if (event != UIEvent::Click) return;
-    popup.id = ScreenID::Popup;
-    popup.configure(widgets);
+    popup.configure(parent, title, widgets, widgetCount);
     navigator->registerScreen(&popup);
     navigator->navigate(ScreenID::Popup);
   }

@@ -6,7 +6,6 @@
 #include "application/loading.hpp"
 #include "application/menu.hpp"
 #include "application/screens.hpp"
-#include "drivers/adc.hpp"
 #include "drivers/lcd.hpp"
 #include "drivers/matrix.hpp"
 #include "drivers/pin.hpp"
@@ -41,7 +40,7 @@ static void usartRxHandler() {
 
 int main(void) {
   Timer::init();
-  Adc::init();
+  Analog::init();
   Dial::init();
   LCD display(D8, A1, A2, A3, A4, A5);
   LCDDisplay::init(&display);
@@ -124,7 +123,7 @@ int main(void) {
       if (state.mode == RadarMode::Alert && !state.alarmEnabled) {
         state.alarmEnabled = true;
         RadarController::stop();
-        buzzer.tone(2000);
+        buzzer.start();
 
         // Navigate to alert screen
         alarm.parent = ui.getCurrentScreen()->id;

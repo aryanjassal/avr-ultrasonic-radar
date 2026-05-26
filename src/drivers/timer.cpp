@@ -15,7 +15,7 @@ void Timer::init() {
   sei();                               // Enable interrupts
 }
 
-uint32_t Timer::millis() {
+uint32_t millis() {
   uint32_t t;
 
   uint8_t sreg = SREG;
@@ -26,7 +26,7 @@ uint32_t Timer::millis() {
   return t;
 }
 
-uint32_t Timer::micros() {
+uint32_t micros() {
   uint32_t ms;
   uint8_t t;
   uint8_t sreg = SREG;
@@ -45,12 +45,12 @@ uint32_t Timer::micros() {
   return (ms * 1000ul) + (t * 4ul);
 }
 
-void Timer::delay(uint32_t ms) {
+void delay(uint32_t ms) {
   uint32_t start = millis();
   while ((millis() - start) < ms);
 }
 
-void Timer::delayMicroseconds(uint32_t us) {
+void delayMicroseconds(uint32_t us) {
   // For micros, we need a much more precise implementation for timekeeping, as
   // using the coarse interrupt method will easily result in times over 10us.
   // For microsecond accuracy, we need to go down to a clock cycle level. At
@@ -62,11 +62,3 @@ void Timer::delayMicroseconds(uint32_t us) {
     while (cycles--) { asm volatile("nop"); }
   }
 }
-
-uint32_t millis() { return Timer::millis(); }
-
-uint32_t micros() { return Timer::micros(); }
-
-void delay(uint32_t ms) { Timer::delay(ms); }
-
-void delayMicroseconds(uint32_t us) { Timer::delayMicroseconds(us); }

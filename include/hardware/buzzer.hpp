@@ -1,7 +1,5 @@
 #pragma once
 
-#include <stdint.h>
-
 #include "drivers/pin.hpp"
 
 class Buzzer {
@@ -13,8 +11,9 @@ class Buzzer {
   // Use D11 (OC2A) ideally.
   Buzzer(const PinDescriptor& pin);
 
-  // Start tone generation.
-  void tone(uint16_t frequency);
+  // Start tone generation. Manual tone selection is lost due to needing Timer2
+  // to be in Phase Correct TOP mode.
+  void start();
 
   // Stop buzzer.
   void stop();

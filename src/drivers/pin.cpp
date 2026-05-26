@@ -1,6 +1,12 @@
-#include <avr/interrupt.h>
-
 #include "drivers/pin.hpp"
+
+// ADC
+
+void Analog::init() {
+  ADMUX = (1 << REFS0);  // AVcc reference
+  // Enable ADC, prescaler 128
+  ADCSRA = (1 << ADEN) | (1 << ADPS2) | (1 << ADPS1) | (1 << ADPS0);
+}
 
 // Output pins
 
@@ -29,44 +35,24 @@ void OutputPin::toggle() { *mPort ^= mMask; }
 InputPin::InputPin(const PinDescriptor& d, bool pullup)
     : mPort(d.port), mPin(d.pin), mMask(1 << d.bit) {
   *d.ddr &= ~mMask;  // Set input
-  if (pullup) {
-    *mPort |= mMask;  // Enable pull-up
-  } else {
-    *mPort &= ~mMask;  // Floating
-  }
+  // clang-format off
+  if (pullup) *mPort |= mMask;  // Enable pull-up
+  else *mPort &= ~mMask;        // Floating
+  // clang-format on
 }
 
 bool InputPin::read() const { return (*mPin & mMask) != 0; }
 
 // ADC pins
 
-AdcPin::AdcPin(const PinDescriptor& d) : mChannel(d.bit) {
-  // // Disable digital input
-  // // Not sure if it is actually useful, disabled until proven otherwise
-  // DIDR0 |= (1 << mChannel);
-}
+AnalogPin::AnalogPin(const PinDescriptor& d) : mChannel(d.bit) {}
 
-uint16_t AdcPin::read() {
-  // Select channel (keep reference bits)
-  ADMUX = (ADMUX & 0xf0) | (mChannel & 0x0f);
-
-  // Start conversion
-  ADCSRA |= (1 << ADSC);
-
-  // Wait
-  while (ADCSRA & (1 << ADSC));
-
+uint16_t AnalogPin::read() {
+  ADMUX = (ADMUX & 0xf0) | (mChannel & 0x0f);  // Select channel
+  ADCSRA |= (1 << ADSC);                       // Start conversion
+  while (ADCSRA & (1 << ADSC));                // Wait
   return ADC;
 }
-
-// PWM pins
-
-PwmPin::PwmPin(const PinDescriptor& pin, volatile uint8_t* ocr)
-    : mOcr(ocr), mPin(pin) {
-  *pin.ddr |= (1 << pin.bit);  // Set output
-};
-
-void PwmPin::write(uint8_t duty) { *mOcr = duty; }
 
 // Pin descriptors
 
@@ -92,17 +78,3 @@ const PinDescriptor A2 = {&DDRC, &PORTC, &PINC, PC2};
 const PinDescriptor A3 = {&DDRC, &PORTC, &PINC, PC3};
 const PinDescriptor A4 = {&DDRC, &PORTC, &PINC, PC4};
 const PinDescriptor A5 = {&DDRC, &PORTC, &PINC, PC5};
-
-const PinDescriptor& PWM_OC1A = D9;
-const PinDescriptor& PWM_OC1B = D10;
-
-const PinDescriptor& PWM_OC2A = D11;
-const PinDescriptor& PWM_OC2B = D3;
-
-const PinDescriptor& PIN_INT0 = D2;
-const PinDescriptor& PIN_INT1 = D3;
-
-const PinDescriptor& USART_RX = D0;
-const PinDescriptor& USART_TX = D1;
-
-const PinDescriptor& LED_BUILTIN = D13;

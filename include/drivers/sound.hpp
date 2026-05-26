@@ -6,7 +6,7 @@
 
 class Sound {
  private:
-  AdcPin input;
+  AnalogPin input;
   uint16_t peakToPeak = 0;
   uint16_t signalMax = 0;
   uint16_t signalMin = 1023;
